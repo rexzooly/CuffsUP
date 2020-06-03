@@ -1,56 +1,129 @@
-handcuffed = false
-handsup = false
+--[[
+	CuffsUP originally known as Handcuff and Handsup scripts 
+	Version 1.0.0.0
+	By BadKaiPanda[NavaRayUK(Rexzooly)] & Xander1998 (X. Cross)
+]]--
 
-local Animation = {
-		HandsUp = {
+-- These options are only used by the client and have no reason to be changed by any dev, so leave it.
+CuffsUP.Animation = {
+		HandsUP = {
 			Dict = "random@mugging3", 
-			Name = "handsup_standing_base"
+			Name = "handsup_standing_base",
+			IsHandsUP = false
 		},
 		Handcuffs = {
-			Dict = "mp_arresting"
-			Name = "idle"
+			Dict = "mp_arresting",
+			Name = "idle",
+			IsHandsCuffed = false
 		}
 	}
-
-local unarmed = GetHashKey("WEAPON_UNARMED")
-
-
--- Set up Cuff
-TriggerEvent("chat:addSuggestion", "/"..CHConfig.Commands.Cuff, CHConfig.Commands.CuffInformation, CHConfig.Commands.CuffChatArguments);
+CuffsUP.Unarmed = GetHashKey("WEAPON_UNARMED");
 
 
 
-if CHConfig.HandsUP.Enabled then
+-- this will enable users to know about this command in the chat, but does not disable it, this function is created to respeat true RP users.
+if CuffsUP.OverRides.Viewable then
+	TriggerEvent("chat:addSuggestion", "/"..CuffsUP.OverRides.ChatCommand, CuffsUP.OverRides.ChatInformation, CuffsUP.OverRides.ChatArguments);
+end
+
+	RegisterNetEvent("cuffsup:mutemode")
+	AddEventHandler("cuffsup:mutemode", function()
+		CuffsUP.Client.Note.Mode = 0;
+		DisplayMode = CuffsUP.Note;
+		if DisplayMode.Mode > 0 then
+			if DisplayMode.Mode == 1 then
+				TriggerEvent("chatMessage", "Mute Mode Enabled");
+			else
+				CuffsUP.Print("Mute Mode Enabled");
+			end
+		end
+	end)
+	
+	RegisterNetEvent("cuffsup:displaymode")
+	AddEventHandler("cuffsup:displaymode", function()
+		CuffsUP.Client.Note.Mode = 2;
+		DisplayMode = CuffsUP.Note;
+		if DisplayMode.Mode > 0 then
+			if DisplayMode.Mode == 1 then
+				TriggerEvent("chatMessage", "Display Mode Enabled");
+			else
+				CuffsUP.Print("Display Mode Enabled");
+			end
+		end		
+	end)
+	
+	RegisterNetEvent("cuffsup:chatmode")
+	AddEventHandler("cuffsup:chatmode", function()
+		CuffsUP.Client.Note.Mode = 1;
+		DisplayMode = CuffsUP.Note;
+		if DisplayMode.Mode > 0 then
+			if DisplayMode.Mode == 1 then
+				TriggerEvent("chatMessage", "Chat Mode Enabled");
+			else
+				CuffsUP.Print("Chat Mode Enabled");
+			end
+		end		
+	end)
+
+	RegisterNetEvent("cuffsup:reset")
+	AddEventHandler("cuffsup:reset", function()
+		CuffsUP.Client.Note.Mode = nil;
+		DisplayMode = CuffsUP.Note;
+		if DisplayMode.Mode > 0 then
+			if DisplayMode.Mode == 1 then
+				TriggerEvent("chatMessage", "Reset To Default");
+			else
+				CuffsUP.Print("Reset To Default");
+			end
+		end		
+	end)
+if CuffsUP.HandsUP.Enabled then
 	-- Set up Handsup
-	TriggerEvent("chat:addSuggestion", "/"..CHConfig.HandsUP.Command.ChatCommand, CHConfig.HandsUP.Command.ChatInformation, CHConfig.HandsUP.Command.ChatArguments);
-	
-	RegisterNetEvent("cuffup:"..CHConfig.HandsUP.Command.ChatCommand)
-	AddEventHandler("cuffup:"..CHConfig.HandsUP.Command.ChatCommand, function()
-		TriggerEvent("cuffup:Handsup");
-	end);
-	
-	RegisterNetEvent("cuffup:Handsup")
-	AddEventHandler("cuffup:Handsup", function()
+	if CuffsUP.HandsUP.Command.Enabled then
+		TriggerEvent("chat:addSuggestion", "/"..CuffsUP.HandsUP.Command.ChatCommand, CuffsUP.HandsUP.Command.ChatInformation, CuffsUP.HandsUP.Command.ChatArguments);
+	end
+	RegisterNetEvent("cuffsup:Handsup")
+	AddEventHandler("cuffsup:Handsup", function()
 		local player = PlayerId()
 		local plyPed = GetPlayerPed(player)
 		if DoesEntityExist(plyPed) then
-			if not handcuffed then
-				if handsup then
-					ClearPedSecondaryTask(plyPed)
-					SetEnableHandcuffs(plyPed, false)
-					SetCurrentPedWeapon(plyPed, unarmed, true)
-					TriggerEvent("chatMessage", "^1Your hands are down")
-					handsup = false
-				else
-					RequestAnimDict(Animation.HandsUp.Dict)
-					while not HasAnimDictLoaded(Animation.HandsUp.Dict) do
-						Citizen.Wait(100)
+			if not CuffsUP.Animation.Handcuffs.IsHandsCuffed then
+				if CuffsUP.Animation.HandsUP.IsHandsUP then
+					CuffsUP.Animation.HandsUP.IsHandsUP = not CuffsUP.Animation.HandsUP.IsHandsUP;
+					ClearPedSecondaryTask(plyPed);
+					SetEnableHandcuffs(plyPed, false);
+					SetCurrentPedWeapon(plyPed, CuffsUP.Unarmed, true);
+					DisplayMode = CuffsUP.HandsUP.Note;
+					if type(CuffsUP.Client.Note.Mode) ~= "nil" then
+						DisplayMode.Mode = CuffsUP.Client.Note.Mode;
 					end
-					TaskPlayAnim(plyPed, Animation.HandsUp.Dict, Animation.HandsUp.Name, 8.0, -8, -1, 49, 0, 0, 0, 0)
+					if DisplayMode.Mode > 0 then
+						if DisplayMode.Mode == 1 then
+							TriggerEvent("chatMessage", DisplayMode.Down);
+						else
+							CuffsUP.Print(DisplayMode.Down);
+						end
+					end
+				else
+					CuffsUP.Animation.HandsUP.IsHandsUP = not CuffsUP.Animation.HandsUP.IsHandsUP
+					RequestAnimDict(CuffsUP.Animation.HandsUP.Dict)
+					while not HasAnimDictLoaded(CuffsUP.Animation.HandsUP.Dict) do
+						Citizen.Wait(1)
+					end
+					TaskPlayAnim(plyPed, CuffsUP.Animation.HandsUP.Dict, CuffsUP.Animation.HandsUP.Name, 8.0, -8, -1, 49, 120, 0, 0, 0)
 					SetEnableHandcuffs(plyPed, true)
-					SetCurrentPedWeapon(plyPed, unarmed, true)
-					TriggerEvent("chatMessage", "^1Your hands are up")
-					handsup = true
+					SetCurrentPedWeapon(plyPed, CuffsUP.Unarmed, true)
+					DisplayMode = CuffsUP.HandsUP.Note;
+					if type(CuffsUP.Client.Note.Mode) ~= "nil" then
+						DisplayMode.Mode = CuffsUP.Client.Note.Mode;
+					end
+					if DisplayMode.Mode > 0 then
+						if DisplayMode.Mode == 1 then
+							TriggerEvent("chatMessage", DisplayMode.UP);
+						else
+							CuffsUP.Print(DisplayMode.UP);
+						end
+					end
 				end
 			else
 				TriggerEvent("chatMessage", "^1Good luck putting your hands up in cuffs....")
@@ -64,18 +137,25 @@ if CHConfig.HandsUP.Enabled then
 			local plyPed = GetPlayerPed(player)
 			if DoesEntityExist(plyPed) then
 
+				-- HandsUP Key Logic
+				if CuffsUP.HandsUP.Key.Enabled then
+					if IsControlJustPressed(0, CuffsUP.HandsUP.Key.vKey) then
+						TriggerEvent("cuffsup:Handsup");
+					end
+				end
+					
 				-- Backup Handsup
-				if handsup then
-					if not IsEntityPlayingAnim(plyPed, Animation.HandsUp.Dict, Animation.HandsUp.Name, 3) then
-						Citizen.Wait(3000)
-						if handsup and not handcuffed then
-							TaskPlayAnim(plyPed, Animation.HandsUp.Dict, Animation.HandsUp.Name, 8.0, -8, -1, 49, 0, 0, 0, 0)
+				if CuffsUP.Animation.HandsUP.IsHandsUP then
+					if not IsEntityPlayingAnim(plyPed, CuffsUP.Animation.HandsUP.Dict, CuffsUP.Animation.HandsUP.Name, 3) then
+						Citizen.Wait(1000)
+						if CuffsUP.Animation.HandsUP.IsHandsUP and not CuffsUP.Animation.Handcuffs.IsHandsCuffed then
+							TaskPlayAnim(plyPed, CuffsUP.Animation.HandsUP.Dict, CuffsUP.Animation.HandsUP.Name, 8.0, -8, -1, 49, 0, 0, 0, 0)
 						end
 					end
 				end
 
 				-- Remove ability to drive vehicles
-				if handsup then
+				if CuffsUP.Animation.HandsUP.IsHandsUP then
 					DisablePlayerFiring(player, true)
 					DisableControlAction(0, 25, true)
 					DisableControlAction(1, 140, true)
@@ -92,82 +172,124 @@ if CHConfig.HandsUP.Enabled then
 		end
 	end)
 end
-RegisterNetEvent("Handcuff")
-AddEventHandler("Handcuff", function()
-	local player = PlayerId()
-	local plyPed = GetPlayerPed(player)
-	if DoesEntityExist(plyPed) then
-		if IsEntityPlayingAnim(plyPed, animation.dict, animation.name, 3) then
-			ClearPedSecondaryTask(plyPed)
-			SetEnableHandcuffs(plyPed, false)
-			SetEnableHandcuffs(plyPed, false)
-			SetCurrentPedWeapon(ped, unarmed, true)
-			handcuffed = false
-		else
-			handsup = false
-			ClearPedTasksImmediately(plyPed)
-			RequestAnimDict(animation.dict)
-			while not HasAnimDictLoaded(animation.dict) do
-				Citizen.Wait(100)
-			end
-
-			TaskPlayAnim(plyPed, animation.dict, animation.name, 8.0, -8, -1, 49, 0, 0, 0, 0)
-			SetEnableHandcuffs(plyPed, true)
-			SetCurrentPedWeapon(plyPed, unarmed, true)
-			handcuffed = true
-		end
+if CuffsUP.Cuffs.Enabled then
+	-- Set up Cuff
+	if CuffsUP.Cuffs.Command.Enabled then
+		TriggerEvent("chat:addSuggestion", "/"..CuffsUP.Cuffs.Command.ChatCommand, CuffsUP.Cuffs.Command.ChatInformation, CuffsUP.Cuffs.Command.ChatArguments);
 	end
-end)
-
-Citizen.CreateThread(function()
-	while true do
+	
+	RegisterNetEvent("cuffup:handcuff")
+	AddEventHandler("cuffup:handcuff", function()
 		local player = PlayerId()
 		local plyPed = GetPlayerPed(player)
 		if DoesEntityExist(plyPed) then
+			if IsEntityPlayingAnim(plyPed, CuffsUP.Animation.Handcuffs.Dict, CuffsUP.Animation.Handcuffs.Name, 3) then
+				ClearPedSecondaryTask(plyPed)
+				SetEnableHandcuffs(plyPed, false)
+				SetEnableHandcuffs(plyPed, false)
+				SetCurrentPedWeapon(ped, CuffsUP.Unarmed, true)
+				CuffsUP.Animation.Handcuffs.IsHandsCuffed = false
+			else
+				CuffsUP.Animation.HandsUP.IsHandsUP = false;
+				ClearPedTasksImmediately(plyPed)
+				RequestAnimDict(CuffsUP.Animation.Handcuffs.Dict)
+				while not HasAnimDictLoaded(CuffsUP.Animation.Handcuffs.Dict) do
+					Citizen.Wait(1)
+				end
 
-			-- Cuffing Logic
-			if not IsPedInAnyVehicle(plyPed, false) then
-				if IsControlJustPressed(0, 186) then
-					local targetped = GetPedInFront()
-					print(targetped)
-					if targetped ~= 0 then
-						local targetplayer = GetPlayerFromPed(targetped)
-						if targetedPlayer ~= -1 then
-							TriggerServerEvent("CheckHandcuff", GetPlayerServerId(targetplayer))
+				TaskPlayAnim(plyPed, CuffsUP.Animation.Handcuffs.Dict, CuffsUP.Animation.Handcuffs.Name, 8.0, -8, -1, 49, 0, 0, 0, 0)
+				SetEnableHandcuffs(plyPed, true)
+				SetCurrentPedWeapon(plyPed, CuffsUP.Unarmed, true)
+				CuffsUP.Animation.Handcuffs.IsHandsCuffed = true
+			end
+		end
+	end)
+	if CuffsUP.Cuffs.NPC then
+		RegisterNetEvent("cuffup:handcuffAI")
+		AddEventHandler("cuffup:handcuffAI", function(npc)
+			local plyPed = npc
+			if DoesEntityExist(plyPed) then
+				if IsEntityPlayingAnim(plyPed, CuffsUP.Animation.Handcuffs.Dict, CuffsUP.Animation.Handcuffs.Name, 3) then
+					handcuffedAI = false
+					ClearPedSecondaryTask(plyPed);
+					ClearPedTasksImmediately(plyPed);
+				else
+					CuffsUP.Animation.HandsUP.IsHandsUP = false
+					handcuffedAI = true
+					TaskSetBlockingOfNonTemporaryEvents(plyPed, true);
+					RequestAnimDict(CuffsUP.Animation.Handcuffs.Dict)
+					while not HasAnimDictLoaded(CuffsUP.Animation.Handcuffs.Dict) do
+						Citizen.Wait(1)
+					end
+					TaskPlayAnim(plyPed, CuffsUP.Animation.Handcuffs.Dict, CuffsUP.Animation.Handcuffs.Name, 8.0, -8, -1, 49, 0, 0, 0, 0)
+				end
+			end
+		end)
+	end
+	Citizen.CreateThread(function()
+		while true do
+			local player = PlayerId()
+			local plyPed = GetPlayerPed(player)
+			if DoesEntityExist(plyPed) then
+				
+				if CuffsUP.Cuffs.Key.Enabled then
+					-- Cuffing Logic
+					if not IsPedInAnyVehicle(plyPed, false) then
+						if IsControlJustPressed(0, CuffsUP.Cuffs.Key.vKey) then
+							local targetped = CuffsUP.GetPedInFront()
+							if targetped ~= 0 then
+								local targetplayer = CuffsUP.GetPlayerFromPed(targetped)
+								if targetplayer ~= -1 then
+									TriggerServerEvent("CheckHandcuff", GetPlayerServerId(targetplayer));
+								else
+									if CuffsUP.Cuffs.NPC then
+										TriggerEvent("cuffup:handcuffAI", targetped);
+									end
+								end
+							end
 						end
 					end
 				end
-			end
-
-			-- Backup Handcuffs
-			if handcuffed then
-				if not IsEntityPlayingAnim(plyPed, animation.dict, animation.name, 3) then
-					Citizen.Wait(3000)
-					if handcuffed then
-						TaskPlayAnim(plyPed, animation.dict, animation.name, 8.0, -8, -1, 49, 0, 0, 0, 0)
+				
+				-- Backup Handcuffs
+				if CuffsUP.Animation.Handcuffs.IsHandsCuffed then
+					if not IsEntityPlayingAnim(plyPed, CuffsUP.Animation.Handcuffs.Dict, CuffsUP.Animation.Handcuffs.Name, 3) then
+						Citizen.Wait(1000)
+						if CuffsUP.Animation.Handcuffs.IsHandsCuffed then
+							TaskPlayAnim(plyPed, CuffsUP.Animation.Handcuffs.Dict, CuffsUP.Animation.Handcuffs.Name, 8.0, -8, -1, 49, 0, 0, 0, 0)
+						end
 					end
 				end
-			end
 
-			-- Remove ability to drive vehicles
-			if handcuffed then
-				DisablePlayerFiring(player, true)
-				DisableControlAction(0, 25, true)
-				DisableControlAction(1, 140, true)
-				DisableControlAction(1, 141, true)
-				DisableControlAction(1, 142, true)
-				SetPedPathCanUseLadders(GetPlayerPed(PlayerId()), false)
-				if IsPedInAnyVehicle(GetPlayerPed(PlayerId()), false) then
-					DisableControlAction(0, 59, true)
+				-- Remove ability to drive vehicles
+				if CuffsUP.Animation.Handcuffs.IsHandsCuffed then
+					DisablePlayerFiring(player, true)
+					DisableControlAction(0, 25, true)
+					DisableControlAction(1, 140, true)
+					DisableControlAction(1, 141, true)
+					DisableControlAction(1, 142, true)
+					SetPedPathCanUseLadders(GetPlayerPed(PlayerId()), false)
+					if IsPedInAnyVehicle(GetPlayerPed(PlayerId()), false) then
+						DisableControlAction(0, 59, true)
+					end
 				end
+				
 			end
-			
+			Citizen.Wait(0)
 		end
-		Citizen.Wait(0)
+	end)
+end
+function CuffsUP.Print(text_s, txt_b, options_t)
+	SetNotificationTextEntry("STRING");
+	AddTextComponentString(text_s)
+	if txt_b then
+		SetNotificationMessage(options_t[1], icon, true, 4, sender, title, text)
 	end
-end)
+	DrawNotification(false, false)
+end
 
-function GetPedInFront()
+
+function CuffsUP.GetPedInFront()
 	local player = PlayerId()
 	local plyPed = GetPlayerPed(player)
 	local plyPos = GetEntityCoords(plyPed, false)
@@ -177,7 +299,7 @@ function GetPedInFront()
 	return ped
 end
 
-function GetPlayerFromPed(ped)
+function CuffsUP.GetPlayerFromPed(ped)
 	for a = 0, 64 do
 		if GetPlayerPed(a) == ped then
 			return a

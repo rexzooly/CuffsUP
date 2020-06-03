@@ -1,11 +1,11 @@
 --[[
-	Cuff-HandsUP
+	CuffsUP originally known as Handcuff and Handsup scripts 
 	Version 1.0.0.0
 	By BadKaiPanda[NavaRayUK(Rexzooly)] & Xander1998 (X. Cross)
 ]]--
 
 --[[
-	Don't edit this table, it's used for the Keyboard short cuts.
+	Don't edit this table, it's used for the Keyboard short cuts, start editing from line 31
 ]]-- 
 vKeys = {
   ["ESC"] = 322, ["F1"] = 288, ["F2"] = 289, ["F3"] = 170, ["F5"] = 166, ["F6"] = 167, ["F7"] = 168, ["F8"] = 169, ["F9"] = 56, ["F10"] = 57,
@@ -18,12 +18,32 @@ vKeys = {
   ["LEFT"] = 174, ["RIGHT"] = 175, ["TOP"] = 27, ["DOWN"] = 173,
   ["NENTER"] = 201, ["N4"] = 108, ["N5"] = 60, ["N6"] = 107, ["N+"] = 96, ["N-"] = 97, ["N7"] = 117, ["N8"] = 61, ["N9"] = 118
 }
+NoteMode = {
+	Disabled = 0,			-- Disabled Option
+	Chat = 1,				-- Show In Chat Option
+	Display = 2				-- Show on screen
+}
 
 
 --[[
 	Main config section.
 ]]-- 
-CHConfig = {	
+CuffsUP = { 
+	OverRides = {												-- This is for the true RP users that don't want to see messages for this script, I advice you not to edit this.
+		Viewable = true,										-- You can disable it from been shown in chat so only your streamers and RP users can use it - Default: true
+		ChatCommand = "cuffsup",
+		ChatInformation = "This function lets RP users pick there notification options",
+		ChatArguments = {
+			{
+				name = "mute, chat, display, reset", 
+				help = "Select on of the modes or reset it back to server settings."
+			}			
+		}
+	},
+	Note = {													-- This is for the main software, so when a change it done by the client to be shown.
+		Enabled = true,											-- Enable or disable normal notifications, but I would say leave this on - Default: true
+		Mode = NoteMode.Display									-- Where to show your notifications - Default: NoteMode.Display
+	},															-- Modes: NoteMode.Display, NoteMode.Chat, NoteMode.Disabled
 	HandsUP = {
 		Enabled = true,											-- Enable or disable the hands up function fully Default:true
 		Key = {
@@ -35,24 +55,36 @@ CHConfig = {
 			ChatCommand = "hu",									-- The command in the chat - Default: hu
 			ChatInformation = "Toggle hands up and down.",		-- What it says in the chat when you start typing the command - Default: Toggle hands up and down.
 			ChatArguments = false 								-- Leave this fauls unless you have edited the command to accept arugemnts then change this to a table of arugments.
-		}
+		},
+		Note = {
+			Mode = NoteMode.Display,							-- Change from NoteMode.Display to NoteMode.Chat or NoteMode.Disabled - Default: NoteMode.Display
+			UP = "~r~Your hands are up",						-- The message shown when your hands are up - Default: Your hands are up
+			Down = "~g~Your hands are down"						-- The message shown when your hands are down - Default: Your hands are down
+		}														-- Note if your using Display use ~ commands, if your using chat use ^ commands.
 	},
 	Cuffs = {
-		Enabled = true,
-		Key = {
-			Enabled = true,
-			vKey = vKeys["U"]
+		Enabled = true,											-- Enable or disable cuffs fucntionality - Default: true
+		NPC = true,												-- Can you cuff NPC's or not - Default: true
+		Key = {													
+			Enabled = true,										-- Enable or disable the key option -Default: true
+			vKey = vKeys["U"]									-- This is the key pressed in game, coverted to vKeys Key list at the top - Default:U
 		},
 		Command = {
 			Enabled = true,										-- Enable and disabled the Command fucntionality - Default:true
 			ChatCommand = "cuff",								-- The command in the chat - Default: cuff
 			ChatInformation = "Toggles the cuffs",				-- What it says in the chat when you start typing the command - Default: Toggle hands up and down.
 			ChatArguments = false 								-- Leave this fauls unless you have edited the command to accept arugemnts then change this to a table of arugments.			
-		}
+		},
+		Note = NoteMode.Display	
 	
 	},
-	UseRestriction = false, 	-- Enable or disable the AllowedUsers table.concat - Default: false
-	AllowedUsers = {			-- List of users to be allowed to use the command. -- Default: Blank/No Users.
+	UseRestriction = false, 									-- Enable or disable the AllowedUsers table.concat - Default: false
+	AllowedUsers = {											-- List of users to be allowed to use the command. -- Default: Blank/No Users.
 		----------
-	}	
+	},
+	Client = { 													-- Don't edit this this is for the client/user cache.
+		Note = {
+			Mode = nil
+		}
+	}
 }
