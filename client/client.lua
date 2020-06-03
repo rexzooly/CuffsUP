@@ -26,57 +26,58 @@ if CuffsUP.OverRides.Viewable then
 	TriggerEvent("chat:addSuggestion", "/"..CuffsUP.OverRides.ChatCommand, CuffsUP.OverRides.ChatInformation, CuffsUP.OverRides.ChatArguments);
 end
 
-	RegisterNetEvent("cuffsup:mutemode")
-	AddEventHandler("cuffsup:mutemode", function()
-		CuffsUP.Client.Note.Mode = 0;
-		DisplayMode = CuffsUP.Note;
-		if DisplayMode.Mode > 0 then
-			if DisplayMode.Mode == 1 then
-				TriggerEvent("chatMessage", "Mute Mode Enabled");
-			else
-				CuffsUP.Print("Mute Mode Enabled");
-			end
+RegisterNetEvent("cuffsup:mutemode")
+AddEventHandler("cuffsup:mutemode", function()
+	CuffsUP.Client.Note.Mode = 0;
+	DisplayMode = CuffsUP.Note;
+	if DisplayMode.Mode > 0 then
+		if DisplayMode.Mode == 1 then
+			TriggerEvent("chatMessage", "Mute Mode Enabled");
+		else
+			CuffsUP.Print("Mute Mode Enabled");
 		end
-	end)
-	
-	RegisterNetEvent("cuffsup:displaymode")
-	AddEventHandler("cuffsup:displaymode", function()
-		CuffsUP.Client.Note.Mode = 2;
-		DisplayMode = CuffsUP.Note;
-		if DisplayMode.Mode > 0 then
-			if DisplayMode.Mode == 1 then
-				TriggerEvent("chatMessage", "Display Mode Enabled");
-			else
-				CuffsUP.Print("Display Mode Enabled");
-			end
-		end		
-	end)
-	
-	RegisterNetEvent("cuffsup:chatmode")
-	AddEventHandler("cuffsup:chatmode", function()
-		CuffsUP.Client.Note.Mode = 1;
-		DisplayMode = CuffsUP.Note;
-		if DisplayMode.Mode > 0 then
-			if DisplayMode.Mode == 1 then
-				TriggerEvent("chatMessage", "Chat Mode Enabled");
-			else
-				CuffsUP.Print("Chat Mode Enabled");
-			end
-		end		
-	end)
+	end
+end)
 
-	RegisterNetEvent("cuffsup:reset")
-	AddEventHandler("cuffsup:reset", function()
-		CuffsUP.Client.Note.Mode = nil;
-		DisplayMode = CuffsUP.Note;
-		if DisplayMode.Mode > 0 then
-			if DisplayMode.Mode == 1 then
-				TriggerEvent("chatMessage", "Reset To Default");
-			else
-				CuffsUP.Print("Reset To Default");
-			end
-		end		
-	end)
+RegisterNetEvent("cuffsup:displaymode")
+AddEventHandler("cuffsup:displaymode", function()
+	CuffsUP.Client.Note.Mode = 2;
+	DisplayMode = CuffsUP.Note;
+	if DisplayMode.Mode > 0 then
+		if DisplayMode.Mode == 1 then
+			TriggerEvent("chatMessage", "Display Mode Enabled");
+		else
+			CuffsUP.Print("Display Mode Enabled");
+		end
+	end		
+end)
+
+RegisterNetEvent("cuffsup:chatmode")
+AddEventHandler("cuffsup:chatmode", function()
+	CuffsUP.Client.Note.Mode = 1;
+	DisplayMode = CuffsUP.Note;
+	if DisplayMode.Mode > 0 then
+		if DisplayMode.Mode == 1 then
+			TriggerEvent("chatMessage", "Chat Mode Enabled");
+		else
+			CuffsUP.Print("Chat Mode Enabled");
+		end
+	end		
+end)
+
+RegisterNetEvent("cuffsup:reset")
+AddEventHandler("cuffsup:reset", function()
+	CuffsUP.Client.Note.Mode = nil;
+	DisplayMode = CuffsUP.Note;
+	if DisplayMode.Mode > 0 then
+		if DisplayMode.Mode == 1 then
+			TriggerEvent("chatMessage", "Reset To Default");
+		else
+			CuffsUP.Print("Reset To Default");
+		end
+	end		
+end)
+
 if CuffsUP.HandsUP.Enabled then
 	-- Set up Handsup
 	if CuffsUP.HandsUP.Command.Enabled then
