@@ -179,8 +179,8 @@ if CuffsUP.Cuffs.Enabled then
 		TriggerEvent("chat:addSuggestion", "/"..CuffsUP.Cuffs.Command.ChatCommand, CuffsUP.Cuffs.Command.ChatInformation, CuffsUP.Cuffs.Command.ChatArguments);
 	end
 	
-	RegisterNetEvent("cuffup:handcuff")
-	AddEventHandler("cuffup:handcuff", function()
+	RegisterNetEvent("cuffsup:handcuff")
+	AddEventHandler("cuffsup:handcuff", function()
 		local player = PlayerId()
 		local plyPed = GetPlayerPed(player)
 		if DoesEntityExist(plyPed) then
@@ -206,8 +206,8 @@ if CuffsUP.Cuffs.Enabled then
 		end
 	end)
 	if CuffsUP.Cuffs.NPC then
-		RegisterNetEvent("cuffup:handcuffAI")
-		AddEventHandler("cuffup:handcuffAI", function(npc)
+		RegisterNetEvent("cuffsup:handcuffAI")
+		AddEventHandler("cuffsup:handcuffAI", function(npc)
 			local plyPed = npc
 			if DoesEntityExist(plyPed) then
 				if IsEntityPlayingAnim(plyPed, CuffsUP.Animation.Handcuffs.Dict, CuffsUP.Animation.Handcuffs.Name, 3) then
@@ -244,7 +244,7 @@ if CuffsUP.Cuffs.Enabled then
 									TriggerServerEvent("CheckHandcuff", GetPlayerServerId(targetplayer));
 								else
 									if CuffsUP.Cuffs.NPC then
-										TriggerEvent("cuffup:handcuffAI", targetped);
+										TriggerEvent("cuffsup:handcuffAI", targetped);
 									end
 								end
 							end
@@ -266,6 +266,7 @@ if CuffsUP.Cuffs.Enabled then
 				if CuffsUP.Animation.Handcuffs.IsHandsCuffed then
 					DisablePlayerFiring(player, true)
 					DisableControlAction(0, 25, true)
+					DisableControlAction(0, CuffsUP.Cuffs.Key.vKey, true)
 					DisableControlAction(1, 140, true)
 					DisableControlAction(1, 141, true)
 					DisableControlAction(1, 142, true)
