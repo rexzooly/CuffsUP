@@ -1,1 +1,1 @@
-{"Version":"1.0.0.2", "Repo":"https://github.com/rexzooly/CuffsUP"}
+{"Version":"1.0.0.2", "Repo":{"Main":"https://github.com/rexzooly/CuffsUP", "Short":"https://bit.ly/2Xz4pio"}}
