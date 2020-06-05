@@ -1,10 +1,8 @@
 ![image](https://repository-images.githubusercontent.com/269012299/a9043b00-a715-11ea-8dd5-09a681541028)
 
-# CuffsUP
-CuffsUP originally known as Handcuff and Handsup scripts is a hands up and cuffs script originally created by [xander1998](https://github.com/xander1998)
-you can find his version right [here](https://github.com/xander1998/cuff-handsup)
-
-With this version you are able to config almost everything in the script
+# CuffsUP - grimly branch
+This version is or will be mostly be broken this is my build I will do when I am testing, this will help me keep the script stable
+when I want to try new things but also keep it so you guys are still able to test it.
 
 ### Install
 clone the resource as a zip to download it, unzip and rename CuffsUP-master to CuffsUP 
