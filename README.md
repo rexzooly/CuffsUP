@@ -1,4 +1,4 @@
-![image](https://repository-images.githubusercontent.com/269012299/a9043b00-a715-11ea-8dd5-09a681541028)
+![image](https://i.imgur.com/ka4PWLY.png)
 
 # CuffsUP - grimly branch
 This version is or will be mostly be broken this is my build I will do when I am testing, this will help me keep the script stable
