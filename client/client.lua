@@ -1,6 +1,6 @@
 --[[
 	CuffsUP originally known as Handcuff and Handsup scripts 
-	Version 1.0.0.0
+	Version 1.0.0.1
 	By BadKaiPanda[NavaRayUK(Rexzooly)] & Xander1998 (X. Cross)
 ]]--
 
@@ -188,7 +188,7 @@ if CuffsUP.Cuffs.Enabled then
 				ClearPedSecondaryTask(plyPed)
 				SetEnableHandcuffs(plyPed, false)
 				SetEnableHandcuffs(plyPed, false)
-				SetCurrentPedWeapon(ped, CuffsUP.Unarmed, true)
+				SetCurrentPedWeapon(plyPed, CuffsUP.Unarmed, true)
 				CuffsUP.Animation.Handcuffs.IsHandsCuffed = false
 			else
 				CuffsUP.Animation.HandsUP.IsHandsUP = false;
@@ -204,6 +204,19 @@ if CuffsUP.Cuffs.Enabled then
 				CuffsUP.Animation.Handcuffs.IsHandsCuffed = true
 			end
 		end
+	end)
+	RegisterNetEvent("cuffsup:handcuffcommand")
+	AddEventHandler("cuffsup:handcuffcommand", function()
+		DoTrace, IsAI = CuffsUP.TracePlayer()
+		if DoTrace ~= false then
+			if not IsAI then
+				TriggerServerEvent("CheckHandcuff", DoTrace);
+			else
+				if CuffsUP.Cuffs.NPC then
+					TriggerEvent("cuffsup:handcuffAI", DoTrace);
+				end
+			end
+		end		
 	end)
 	if CuffsUP.Cuffs.NPC then
 		RegisterNetEvent("cuffsup:handcuffAI")
@@ -237,14 +250,13 @@ if CuffsUP.Cuffs.Enabled then
 					-- Cuffing Logic
 					if not IsPedInAnyVehicle(plyPed, false) then
 						if IsControlJustPressed(0, CuffsUP.Cuffs.Key.vKey) then
-							local targetped = CuffsUP.GetPedInFront()
-							if targetped ~= 0 then
-								local targetplayer = CuffsUP.GetPlayerFromPed(targetped)
-								if targetplayer ~= -1 then
-									TriggerServerEvent("CheckHandcuff", GetPlayerServerId(targetplayer));
+							DoTrace, IsAI = CuffsUP.TracePlayer()
+							if DoTrace ~= false then
+								if not IsAI then
+									TriggerServerEvent("CheckHandcuff", DoTrace);
 								else
 									if CuffsUP.Cuffs.NPC then
-										TriggerEvent("cuffsup:handcuffAI", targetped);
+										TriggerEvent("cuffsup:handcuffAI", DoTrace);
 									end
 								end
 							end
@@ -288,6 +300,22 @@ function CuffsUP.Print(text_s, txt_b, options_t)
 		SetNotificationMessage(options_t[1], icon, true, 4, sender, title, text)
 	end
 	DrawNotification(false, false)
+end
+
+-- returns ID and IsAI 
+function CuffsUP.TracePlayer()
+	local targetped = CuffsUP.GetPedInFront()
+	if targetped ~= 0 then
+		local targetplayer = CuffsUP.GetPlayerFromPed(targetped)
+		if targetplayer ~= -1 then
+			return GetPlayerServerId(targetplayer), false;
+		else
+			if CuffsUP.Cuffs.NPC then
+				return targetped, true;
+			end
+		end
+	end
+	return false
 end
 
 

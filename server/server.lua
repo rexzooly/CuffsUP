@@ -1,6 +1,6 @@
 --[[
 	CuffsUP originally known as Handcuff and Handsup scripts 
-	Version 1.0.0.0
+	Version 1.0.0.1
 	By BadKaiPanda[NavaRayUK(Rexzooly)] & Xander1998 (X. Cross)
 ]]--
 
@@ -17,7 +17,11 @@ AddEventHandler('chatMessage', function(source, name, msg)
 	if CuffsUP.Cuffs.Command.Enabled then
 		if cl[1] == "/"..CuffsUP.Cuffs.Command.ChatCommand then
 			CancelEvent();
-			TriggerClientEvent("cuffsup:handcuff", source);
+			if type(cl[2]) ~= "nil" then
+				TriggerClientEvent("cuffsup:handcuff", tonumber(cl[2]))
+			else
+				TriggerClientEvent("cuffsup:handcuffcommand", source);
+			end
 		end
 	end
 	
