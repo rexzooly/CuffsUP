@@ -78,6 +78,11 @@ AddEventHandler("cuffsup:reset", function()
 	end		
 end)
 
+RegisterNetEvent("CacheUpdate")
+AddEventHandler("CacheUpdate", function(cache, optoin)
+	-- future functionality
+end)
+
 if CuffsUP.HandsUP.Enabled then
 	-- Set up Handsup
 	if CuffsUP.HandsUP.Command.Enabled then
