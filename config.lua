@@ -77,10 +77,10 @@ CuffsUP = {
 			ChatInformation = "Toggles the cuffs",				-- What it says in the chat when you start typing the command - Default: Toggle hands up and down.
 			ChatArguments = {
 				{
-					name = "Player ID - Optional",
-					help = "If you set this ID, it will override line of sight."
+					name = "Player ID - Optional",				-- The main option shown when you do /YOURCOMMAND
+					help = "If you set this ID, it will override line of sight." -- the help what shows once you do /YOURCOMMAND space
 				}
-			} 								-- Leave this fauls unless you have edited the command to accept arugemnts then change this to a table of arugments.			
+			} 																
 		},
 		Note = NoteMode.Display	
 	
