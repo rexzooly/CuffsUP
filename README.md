@@ -15,7 +15,7 @@ Delete the master mod fully from your server including the config, grimly is a i
 
 
 ### Added
-* Server side config tool via server console, updater, 
+* Server side config tool via server console, updater, already supports master and grimly branchs.
 
 
 ### Note:
