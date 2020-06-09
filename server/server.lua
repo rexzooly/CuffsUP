@@ -258,7 +258,7 @@ function CuffsUP.AceCheck(source, options)
 		CheckThisOption = true;
 	end
 	if CheckThisOption then
-		if IsPlayerAceAllowed(source, "cuffsup.bosseee") then
+		if IsPlayerAceAllowed(source, "cuffsup.boss") then
 			FuncCuffsCanRunThis = true;
 			FuncReturnRank = "Owner";
 		else
@@ -267,7 +267,7 @@ function CuffsUP.AceCheck(source, options)
 		end
 		-- basic Ace check
 		if not FuncCuffsCanRunThis then
-			if IsPlayerAceAllowed(source, "cuffsup.cuffeee") then
+			if IsPlayerAceAllowed(source, "cuffsup.cuff") then
 				FuncCuffsCanRunThis = true;
 				FuncReturnRank = "Officer";
 			else
