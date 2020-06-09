@@ -34,7 +34,7 @@ CuffsUP = {
 	Author = "By BadKaiPanda[NavaRayUK(Rexzooly)] & Xander1998 (X. Cross)",   -- Please be respectful and leave this. Default: By BadKaiPanda[NavaRayUK(Rexzooly)] & Xander1998 (X. Cross)
 	OverRides = {												-- This is for the true RP users that don't want to see messages for this script, I advice you not to edit this.
 		Viewable = true,										-- You can disable it from been shown in chat so only your streamers and RP users can use it - Default: true
-		ChatCommand = "cuffsup",								
+		ChatCommand = "curp",								
 		ChatInformation = "This function lets RP users pick there notification options",
 		ChatArguments = {
 			{
