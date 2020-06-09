@@ -1,6 +1,6 @@
 --[[
 	CuffsUP originally known as Handcuff and Handsup scripts 
-	Version 1.0.0.2
+	Version 1.0.0.3
 	By BadKaiPanda[NavaRayUK(Rexzooly)] & Xander1998 (X. Cross)
 ]]--
 
