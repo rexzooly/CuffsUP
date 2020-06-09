@@ -1,6 +1,6 @@
 --[[
 	CuffsUP originally known as Handcuff and Handsup scripts 
-	Version 1.0.0.1
+	Version 1.0.0.2
 	By BadKaiPanda[NavaRayUK(Rexzooly)] & Xander1998 (X. Cross)
 ]]--
 
@@ -29,11 +29,12 @@ NoteMode = {
 	Main config section.
 ]]-- 
 CuffsUP = {
-	Version = "1.0.0.1",										-- Will be used in future releases don't edit.
+	Version = 	"1.0.0.2",										-- Version needed don't change it or it will brake the updater
+	Branch =	"grimly",										-- Branch to check with don't delete or change this.
 	Author = "By BadKaiPanda[NavaRayUK(Rexzooly)] & Xander1998 (X. Cross)",   -- Please be respectful and leave this. Default: By BadKaiPanda[NavaRayUK(Rexzooly)] & Xander1998 (X. Cross)
 	OverRides = {												-- This is for the true RP users that don't want to see messages for this script, I advice you not to edit this.
 		Viewable = true,										-- You can disable it from been shown in chat so only your streamers and RP users can use it - Default: true
-		ChatCommand = "cuffsup",
+		ChatCommand = "cuffsup",								
 		ChatInformation = "This function lets RP users pick there notification options",
 		ChatArguments = {
 			{
@@ -50,9 +51,23 @@ CuffsUP = {
 		Enabled = true,											-- Enable or disable the hands up function fully Default:true
 		Key = {
 			Enabled = true,										-- Enable or disable the key option - Default: true
-			vKey = vKeys["Y"]									-- This is the key pressed in game, coverted to vKeys Key list at the top - Default:Y
+			vKey = vKeys["Y"],									-- This is the key pressed in game, coverted to vKeys Key list at the top - Default:Y
+			Ace = {
+				Enabled = false,								-- I believe this is pointless but I added it for people that want to stop people using it.
+				Warning = {
+					Enabled = true,
+					Message = "For some reason your unable to up your hands up."
+				}
+			}
 		},
 		Command = {
+			Ace = {
+				Enabled = false,								-- I believe this is pointless but I added it for people that want to stop people using it.
+				Warning = {
+					Enabled = true,
+					Message = "For some reason your unable to up your hands up."
+				}
+			},
 			Enabled = true,										-- Enable and disabled the command fucntionality - Default:true
 			ChatCommand = "hu",									-- The command in the chat - Default: hu
 			ChatInformation = "Toggle hands up and down.",		-- What it says in the chat when you start typing the command - Default: Toggle hands up and down.
@@ -69,9 +84,23 @@ CuffsUP = {
 		NPC = true,												-- Can you cuff NPC's or not - Default: true
 		Key = {													
 			Enabled = true,										-- Enable or disable the key option -Default: true
-			vKey = vKeys["U"]									-- This is the key pressed in game, coverted to vKeys Key list at the top - Default:U
+			vKey = vKeys["U"],									-- This is the key pressed in game, coverted to vKeys Key list at the top - Default:U
+			Ace = {
+				Enabled = true,
+				Warning = {
+					Enabled = true,
+					Message = "You don't have any cuffs to do that action, maybe your not a officer"
+				}
+			}			
 		},
 		Command = {
+			Ace = {
+				Enabled = true,
+				Warning = {
+					Enabled = true,
+					Message = "You don't have any cuffs to do that action, maybe your not a officer"
+				}
+			},
 			Enabled = true,										-- Enable and disabled the Command fucntionality - Default:true
 			ChatCommand = "cuff",								-- The command in the chat - Default: cuff
 			ChatInformation = "Toggles the cuffs",				-- What it says in the chat when you start typing the command - Default: Toggle hands up and down.

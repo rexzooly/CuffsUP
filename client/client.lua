@@ -1,6 +1,6 @@
 --[[
 	CuffsUP originally known as Handcuff and Handsup scripts 
-	Version 1.0.0.1
+	Version 1.0.0.2
 	By BadKaiPanda[NavaRayUK(Rexzooly)] & Xander1998 (X. Cross)
 ]]--
 
@@ -261,7 +261,7 @@ if CuffsUP.Cuffs.Enabled then
 									TriggerServerEvent("CheckHandcuff", DoTrace);
 								else
 									if CuffsUP.Cuffs.NPC then
-										TriggerEvent("cuffsup:handcuffAI", DoTrace);
+										TriggerServerEvent("CheckHandcuff", DoTrace, true);
 									end
 								end
 							end
@@ -298,6 +298,27 @@ if CuffsUP.Cuffs.Enabled then
 		end
 	end)
 end
+
+
+RegisterNetEvent("cuffsup:messageback")
+AddEventHandler("cuffsup:messageback", function(s_warning)
+	DisplayMode = CuffsUP.Note;
+	if type(CuffsUP.Client.Note.Mode) ~= "nil" then
+		DisplayMode.Mode = CuffsUP.Client.Note.Mode;
+	end
+	if DisplayMode.Mode > 0 then
+		if DisplayMode.Mode == 1 then
+			TriggerEvent("chatMessage", s_warning);
+		else
+			CuffsUP.Print(s_warning);
+		end
+	else
+		CuffsUP.Print(s_warning);
+	end
+end)
+
+
+
 function CuffsUP.Print(text_s, txt_b, options_t)
 	SetNotificationTextEntry("STRING");
 	AddTextComponentString(text_s)

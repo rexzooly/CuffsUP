@@ -1,6 +1,6 @@
 --[[
 	CuffsUP originally known as Handcuff and Handsup scripts 
-	Version 1.0.0.1
+	Version 1.0.0.2
 	By BadKaiPanda[NavaRayUK(Rexzooly)] & Xander1998 (X. Cross)
 ]]--
 CuffsUP.Server = {}
@@ -10,23 +10,19 @@ AddEventHandler('chatMessage', function(source, name, msg)
 	if CuffsUP.HandsUP.Command.Enabled then
 		if cl[1] == "/"..CuffsUP.HandsUP.Command.ChatCommand then
 			CancelEvent();
-			TriggerClientEvent("cuffsup:Handsup", source);	
-		end
-	end
-	-- Check if we can even run the Cuffs function as a command 
-	if CuffsUP.Cuffs.Command.Enabled then
-		if cl[1] == "/"..CuffsUP.Cuffs.Command.ChatCommand then
-			CancelEvent();
-			if type(cl[2]) ~= "nil" then
-				TriggerClientEvent("cuffsup:handcuff", tonumber(cl[2]))
+			CuffsCanRunThis = CuffsUP.AceCheck(source, "HCommand")
+			if CuffsCanRunThis then
+				TriggerClientEvent("cuffsup:Handsup", source);
 			else
-				TriggerClientEvent("cuffsup:handcuffcommand", source);
+				if CuffsUP.Key.Command.Ace.Warning.Enabled then
+					TriggerClientEvent("cuffsup:messageback", source, CuffsUP.Key.Command.Ace.Warning.Message);
+				end		
 			end
 		end
 	end
 	
 	-- Leave this commands RP users have the right to stop messages from scripts let them use these overrides.
-	if cl[1] == "/cuffsup" then
+	if cl[1] == "/curp" then
 		CancelEvent();
 		if type(cl[2]) == "string" then
 			if cl[2] == "mute" then
@@ -42,6 +38,32 @@ AddEventHandler('chatMessage', function(source, name, msg)
 				TriggerClientEvent("cuffsup:reset", source);
 			end
 		end
+	end	
+	
+	-- Check if we can even run the Cuffs function as a command 
+	if CuffsUP.Cuffs.Command.Enabled then
+		if cl[1] == "/"..CuffsUP.Cuffs.Command.ChatCommand then
+			CancelEvent();
+			-- Check if the user is able to run this command.	
+			CuffsCanRunThis = CuffsUP.AceCheck(source, "CCommand")
+		
+			if CuffsCanRunThis then
+				if type(cl[2]) ~= "nil" then
+					TriggerClientEvent("cuffsup:handcuff", tonumber(cl[2]))
+				else
+					TriggerClientEvent("cuffsup:handcuffcommand", source);
+				end
+			else
+				if CuffsUP.Cuffs.Command.Ace.Warning.Enabled then
+					TriggerClientEvent("cuffsup:messageback", source, CuffsUP.Cuffs.Command.Ace.Warning.Message);
+				end
+			end
+		end
+		if cl[1] == "/curank" then
+			CancelEvent();
+			CuffsCanRunThis, SourceRank = CuffsUP.AceCheck(source);
+			TriggerClientEvent("cuffsup:messageback", source, SourceRank);
+		end
 	end
 end)
 
@@ -49,10 +71,26 @@ end)
 -- Check This For Maybe Allowed Users?
 ---------------------------------------------------------------------------
 RegisterServerEvent("CheckHandcuff")
-AddEventHandler("CheckHandcuff", function(player)
-	TriggerClientEvent("cuffsup:handcuff", tonumber(player))
+AddEventHandler("CheckHandcuff", function(player, npc)
+	CuffsCanRunThis = CuffsUP.AceCheck(source, "CCommand")
+
+	if CuffsCanRunThis then
+		if type(npc) ~= "nil" and npc then
+			TriggerClientEvent("cuffsup:handcuffAI", tonumber(player));
+		else
+			TriggerClientEvent("cuffsup:handcuff", tonumber(player));
+		end
+	else
+		if CuffsUP.Cuffs.Command.Ace.Warning.Enabled then
+			TriggerClientEvent("cuffsup:messageback", source, CuffsUP.Cuffs.Command.Ace.Warning.Message);
+		end	
+	end
 end)
 
+RegisterServerEvent("Print")
+AddEventHandler("Print", function(printthis)
+	print(tostring(printthis));
+end)
 
 
 RegisterCommand("CuffsUP", function(source, commands, raw)
@@ -72,6 +110,7 @@ RegisterCommand("CuffsUP", function(source, commands, raw)
 				CuffsUP.Exit(UsedCommand)
 			end
 			if UsedCommand == "accept" then
+				-- Server Waiting Check
 				if CuffsUP.Server.Waiting == "CheckVersion" then
 					CuffsUP.CheckVersion(UsedCommand);
 				end
@@ -79,7 +118,7 @@ RegisterCommand("CuffsUP", function(source, commands, raw)
 					CuffsUP.Exit("reset");
 				end
 			end
-			if UsedCommand == "Cache" then
+			if UsedCommand == "cache" then
 				CuffsUP.UpdateClientCache("", "")
 			end
 		else
@@ -93,11 +132,22 @@ function CuffsUP.CheckVersion(s_action)
 	if type(CuffsUP.Server.Local) == "nil" then
 		local WhoAmI = GetCurrentResourceName();
 		local LocalVersion = LoadResourceFile(WhoAmI, "cuffsup.txt");
-		CuffsUP.Server.Local = json.decode(LocalVersion); 
-		print(CuffsUP.Server.Local.Version)
+		CuffsUP.Server.Local = json.decode(LocalVersion);
 	end
-	print("\n^2CuffsUP: ^0Update Manager")
+	print("\n^2CuffsUP: ^3[Update Manager] 0.1^0")
+	--print("\n^2CuffsUP: ^00,^11,^22,^33,^44,^55,^66,^77,^88,^99")
+	if type(CuffsUP.Branch) ~= "nil" and CuffsUP.Branch == "master" or CuffsUP.Branch == "grimly" then
 	
+		if CuffsUP.Branch == "grimly" then
+			ShowBranch = "^1"..CuffsUP.Branch.."^0";
+		else
+			ShowBranch = "^5"..CuffsUP.Branch.."^0";
+		end
+	
+		print("^2CuffsUP: ^0Branch found, you are running on branch: ".. ShowBranch);
+	else
+		print("^1CuffsUP: ^0Unknown or blank branch, resetting branch back to master.");
+	end	
 	if type(s_action) == "string" and s_action ~= "update" then
 		if s_action == "version" then
 			IsSupported = "";
@@ -109,8 +159,9 @@ function CuffsUP.CheckVersion(s_action)
 			print("^2CuffsUP: ^0Current version is ^3"..CuffsUP.Version.."^0 and seems to be "..IsSupported);
 		end
 		if s_action == "accept" and CuffsUP.Server.Waiting == "CheckVersion" then
-			PerformHttpRequest("https://raw.githubusercontent.com/rexzooly/CuffsUP/master/cuffsup.txt", function(code, grabthis, headers)
-				if code == 200 then
+			PerformHttpRequest("https://raw.githubusercontent.com/rexzooly/CuffsUP/"..CuffsUP.Branch.."/cuffsup.txt", function(StatusCode, grabthis, headers)
+				print("^6CuffsUP ^0get-update-info^0");
+				if StatusCode == 200 then
 					CuffsUP.Server.Grab = json.decode(grabthis);
 					if CuffsUP.Server.Grab.Version ~= CuffsUP.Server.Local.Version then
 						print("^2CuffsUP: ^0This script is out of dated, Local: ^1"..CuffsUP.Server.Local.Version.."^0, GitHub: ^2"..CuffsUP.Server.Grab.Version.."^0");
@@ -118,6 +169,8 @@ function CuffsUP.CheckVersion(s_action)
 					else
 						print("^2CuffsUP: ^0Get cuffing, your up to date.^0");
 					end
+				else
+					print("^1CuffsUP: ^0Status code: ^3"..StatusCode.."^0");
 				end
 				print("^2CuffsUP: ^0Update check compleated.Please press ^1[Enter]^0 to continue.^0");
 				CuffsUP.Server.Waiting = nil;
@@ -173,6 +226,67 @@ function CuffsUP.Exit(s_action)
 end
 function CuffsUP.UpdateClientCache(s_action, option)
 	print("^8CuffsUP: ^0This is a future function, sorry.")
+end
+-- Check if this user has this rank.
+function CuffsUP.AceCheck(source, options)
+	if type(source) == "nil" then
+		print("CuffsUP.AceCheck: bad argument #1 to ' ' (string expected got nil)");
+		return false, "Error";
+	end
+	
+	if type(options) ~= "nil" then
+		if type(options) == "table" then
+			-- future options - custom config trigger for the true or false check.
+			CheckThisOption = options[2];
+			options = options[1];
+		end
+		if options == "CCommand" then
+			CheckThisOption = CuffsUP.Cuffs.Command.Ace.Enabled; 
+		end
+		if options == "CKey" then
+			CheckThisOption = CuffsUP.Cuffs.Key.Ace.Enabled;
+		end
+		-- Not sure why someone would want to do permission checks on hands up but I added it.
+		if options == "HCommand" then
+			CheckThisOption = CuffsUP.HandsUP.Command.Ace.Enabled; 
+		end
+		-- Not sure why someone would want to do permission checks on hands up but I added it.
+		if options == "HKey" then
+			CheckThisOption = CuffsUP.HandsUP.Key.Ace.Enabled;
+		end
+	else
+		CheckThisOption = true;
+	end
+	if CheckThisOption then
+		if IsPlayerAceAllowed(source, "cuffsup.bosseee") then
+			FuncCuffsCanRunThis = true;
+			FuncReturnRank = "Owner";
+		else
+			FuncCuffsCanRunThis = false;
+			FuncReturnRank = "Civ";
+		end
+		-- basic Ace check
+		if not FuncCuffsCanRunThis then
+			if IsPlayerAceAllowed(source, "cuffsup.cuffeee") then
+				FuncCuffsCanRunThis = true;
+				FuncReturnRank = "Officer";
+			else
+				if options == "HCommand" or options == "HKey" then
+					if IsPlayerAceAllowed(source, "cuffsup.hu") then
+						FuncCuffsCanRunThis = true;
+						FuncReturnRank = "Civ";
+					else
+						FuncReturnRank = "Tourist";
+					end
+				end
+			end
+		else
+			FuncCuffsCanRunThis = true;
+		end
+	else
+		FuncCuffsCanRunThis = true;
+	end
+	return FuncCuffsCanRunThis, FuncReturnRank
 end
 function stringsplit(inputstr, sep)
 	if sep == nil then

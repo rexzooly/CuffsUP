@@ -1,1 +1,1 @@
-{"Version":"1.0.0.2", "Repo":{"Main":"https://github.com/rexzooly/CuffsUP", "Short":"https://bit.ly/2Xz4pio", "Branch":"grimly"}}
+{"Version":"1.0.0.2", "Repo":{"Main":"https://github.com/rexzooly/CuffsUP/tree/grimly", "Short":"https://bit.ly/2XFMUx1", "Branch":"grimly"}}
