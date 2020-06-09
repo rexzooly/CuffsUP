@@ -15,7 +15,28 @@ Delete the master mod fully from your server including the config, grimly is a i
 
 
 ### Added
-* Server side config tool via server console, updater, already supports master and grimly branchs.
+* Server side config tool via server console, update checker, already supports master and grimly branchs.
+* Ace Support - **configurable**
+* **/curank** for testing - no in-game chat information for this command.
+* **Export:** CuffsUP.AceCheck
+
+### Ace
+* **add_ace group.cubasic cuffsup.hu allow** *#Enabled basic option*
+* **add_ace group.cuofficer cuffsup.cuff allow** *#Enabled Officers*
+* **add_ace group.cuowner cuffsup.boss allow** *#Enable the boss/owner*
+* **add_principal group.cuofficer group.cubasic** *#Let officers have the basics*
+* **add_principal group.cuowner group.cuofficer** *#Lef the owner have both Officer and Basic*
+* **add_principal group.owner group.cuowner** *#Give owner the boss option*
+* **add_principal group.admin group.cuofficer** *#Give admins the officer option*
+**Giving the permissions:**
+* **add_principal identifier.steam:110000000000000 group.cuofficer** *#Add user as officer only*
+* **add_principal identifier.steam:110000000000000 group.cuowner** *#Add user as script owner but not server owner*
+
+or
+* **add_principal identifier.steam:110000000000000 group.owner** if you added **add_principal group.owner group.cuowner** *#Giver owner script ownership*
+
+### Changed
+* **/cuffsup** in-game to **/curp** as this command stopped working once we added the enw CuffsUP command to the server side.
 
 
 ### Note:
