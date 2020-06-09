@@ -16,7 +16,7 @@ vKeys = {
   ["LEFTCTRL"] = 36, ["LEFTALT"] = 19, ["SPACE"] = 22, ["RIGHTCTRL"] = 70,
   ["HOME"] = 213, ["PAGEUP"] = 10, ["PAGEDOWN"] = 11, ["DELETE"] = 178,
   ["LEFT"] = 174, ["RIGHT"] = 175, ["TOP"] = 27, ["DOWN"] = 173,
-  ["NENTER"] = 201, ["N4"] = 108, ["N5"] = 60, ["N6"] = 107, ["N+"] = 96, ["N-"] = 97, ["N7"] = 117, ["N8"] = 61, ["N9"] = 118
+  ["NENTER"] = 201, ["N4"] = 108, ["N5"] = 60, ["N6"] = 107, ["N+"] = 96, ["N-"] = 97, ["N7"] = 117, ["N8"] = 61, ["N9"] = 118, ["LShift"] = 155
 }
 NoteMode = {
 	Disabled = 0,			-- Disabled Option
@@ -34,7 +34,7 @@ CuffsUP = {
 	Author = "By BadKaiPanda[NavaRayUK(Rexzooly)] & Xander1998 (X. Cross)",   -- Please be respectful and leave this. Default: By BadKaiPanda[NavaRayUK(Rexzooly)] & Xander1998 (X. Cross)
 	OverRides = {												-- This is for the true RP users that don't want to see messages for this script, I advice you not to edit this.
 		Viewable = true,										-- You can disable it from been shown in chat so only your streamers and RP users can use it - Default: true
-		ChatCommand = "curp",								
+		ChatCommand = "cuffsup",								
 		ChatInformation = "This function lets RP users pick there notification options",
 		ChatArguments = {
 			{
@@ -103,7 +103,42 @@ CuffsUP = {
 			},
 			Enabled = true,										-- Enable and disabled the Command fucntionality - Default:true
 			ChatCommand = "cuff",								-- The command in the chat - Default: cuff
-			ChatInformation = "Toggles the cuffs",				-- What it says in the chat when you start typing the command - Default: Toggle hands up and down.
+			ChatInformation = "Toggles the cuffs",				-- What it says in the chat when you start typing the command - Default: Toggles the cuffs.
+			ChatArguments = {
+				{
+					name = "Player ID - Optional",				-- The main option shown when you do /YOURCOMMAND
+					help = "If you set this ID, it will override line of sight." -- the help what shows once you do /YOURCOMMAND space
+				}
+			} 																
+		},
+		Note = NoteMode.Display	
+	
+	},
+	Grab = {
+		Enabled = true,											-- Enable or disable cuffs fucntionality - Default: true
+		NPC = true,												-- Can you cuff NPC's or not - Default: true
+		Key = {													
+			Enabled = true,										-- Enable or disable the key option -Default: true
+			vKey = vKeys["-"],									-- This is the key pressed in game, coverted to vKeys Key list at the top - Default:-
+			Ace = {
+				Enabled = false,
+				Warning = {
+					Enabled = true,
+					Message = "Your grib is no good, your unable to grab people."
+				}
+			}			
+		},
+		Command = {
+			Ace = {
+				Enabled = false,
+				Warning = {
+					Enabled = true,
+					Message = "Your grib is no good, your unable to grab people."
+				}
+			},
+			Enabled = true,										-- Enable and disabled the Command fucntionality - Default:true
+			ChatCommand = "grab",								-- The command in the chat - Default: grab
+			ChatInformation = "Toggles the grab function",		-- What it says in the chat when you start typing the command - Default: Toggles the grab function.
 			ChatArguments = {
 				{
 					name = "Player ID - Optional",				-- The main option shown when you do /YOURCOMMAND

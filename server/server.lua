@@ -1,6 +1,6 @@
 --[[
 	CuffsUP originally known as Handcuff and Handsup scripts 
-	Version 1.0.0.2
+	Version 1.0.0.3
 	By BadKaiPanda[NavaRayUK(Rexzooly)] & Xander1998 (X. Cross)
 ]]--
 CuffsUP.Server = {}
@@ -10,12 +10,12 @@ AddEventHandler('chatMessage', function(source, name, msg)
 	if CuffsUP.HandsUP.Command.Enabled then
 		if cl[1] == "/"..CuffsUP.HandsUP.Command.ChatCommand then
 			CancelEvent();
-			CuffsCanRunThis = CuffsUP.AceCheck(source, "HCommand")
-			if CuffsCanRunThis then
+			HandsCanRunThis = CuffsUP.AceCheck(source, "HCommand")
+			if HandsCanRunThis then
 				TriggerClientEvent("cuffsup:Handsup", source);
 			else
-				if CuffsUP.Key.Command.Ace.Warning.Enabled then
-					TriggerClientEvent("cuffsup:messageback", source, CuffsUP.Key.Command.Ace.Warning.Message);
+				if CuffsUP.HandsUP.Command.Ace.Warning.Enabled then
+					TriggerClientEvent("cuffsup:messageback", source, CuffsUP.HandsUP.Command.Ace.Warning.Message);
 				end		
 			end
 		end
@@ -65,25 +65,136 @@ AddEventHandler('chatMessage', function(source, name, msg)
 			TriggerClientEvent("cuffsup:messageback", source, SourceRank);
 		end
 	end
+	
+	-- Grab function
+	if CuffsUP.Grab.Command.Enabled then
+		if cl[1] == "/"..CuffsUP.Grab.Command.ChatCommand then
+			CancelEvent();
+			GrabCanRunThis, SourceRank = CuffsUP.AceCheck(source, "GCommand");
+
+			if GrabCanRunThis then
+				if type(cl[2]) ~= "nil" then
+					TriggerClientEvent("cuffsup:grab", cl[2]);
+				else
+					TriggerClientEvent("cuffsup:grabcommand", source);
+				end
+			else
+				if CuffsUP.Grab.Command.Ace.Warning.Enabled then
+					TriggerClientEvent("cuffsup:messageback", source, CuffsUP.Grab.Command.Ace.Warning.Message);
+				end		
+			end
+		end
+	end
+	
 end)
 
 ---------------------------------------------------------------------------
 -- Check This For Maybe Allowed Users?
 ---------------------------------------------------------------------------
-RegisterServerEvent("CheckHandcuff")
-AddEventHandler("CheckHandcuff", function(player, npc)
-	CuffsCanRunThis = CuffsUP.AceCheck(source, "CCommand")
-
-	if CuffsCanRunThis then
-		if type(npc) ~= "nil" and npc then
-			TriggerClientEvent("cuffsup:handcuffAI", tonumber(player));
-		else
-			TriggerClientEvent("cuffsup:handcuff", tonumber(player));
+RegisterServerEvent("CheckAction")
+AddEventHandler("CheckAction", function(player, s_action, b_npc)
+	
+	if type(s_action) == "string" then
+		-- Check for Cuffs Ace
+		if s_action == "CCuffs" then
+			CuffsCanRunThis = CuffsUP.AceCheck(source, "CCommand")
+			if CuffsCanRunThis then
+				if type(s_npc) ~= "nil" and b_npc then
+					TriggerClientEvent("cuffsup:handcuffAI", tonumber(player));
+				else
+					TriggerClientEvent("cuffsup:handcuff", tonumber(player));
+				end
+			else
+				if CuffsUP.Cuffs.Command.Ace.Warning.Enabled then
+					TriggerClientEvent("cuffsup:messageback", source, CuffsUP.Cuffs.Command.Ace.Warning.Message);
+				end	
+			end
+		end
+		if s_action == "KCuffs" then
+			CuffsCanRunThis = CuffsUP.AceCheck(source, "CKey")
+			if CuffsCanRunThis then
+				if type(b_npc) ~= "nil" and b_npc then
+					TriggerClientEvent("cuffsup:handcuffAI", source, tonumber(player));
+				else
+					TriggerClientEvent("cuffsup:handcuff", tonumber(player));
+				end
+			else
+				if CuffsUP.Cuffs.Command.Ace.Warning.Enabled then
+					TriggerClientEvent("cuffsup:messageback", source, CuffsUP.Cuffs.Command.Ace.Warning.Message);
+				end	
+			end
+		end
+		if s_action == "CHands" then
+			CuffsCanRunThis = CuffsUP.AceCheck(source, "HCommand")
+			if CuffsCanRunThis then
+				TriggerClientEvent("cuffsup:Handsup", tonumber(source));
+			else
+				if CuffsUP.HandsUP.Command.Ace.Warning.Enabled then
+					TriggerClientEvent("cuffsup:messageback", source, CuffsUP.HandsUP.Command.Ace.Warning.Message);
+				end	
+			end
+		end
+		if s_action == "KHands" then
+			CuffsCanRunThis = CuffsUP.AceCheck(source, "HKey")
+			if CuffsCanRunThis then
+				TriggerClientEvent("cuffsup:Handsup", tonumber(source));
+			else
+				if CuffsUP.HandsUP.Command.Ace.Warning.Enabled then
+					TriggerClientEvent("cuffsup:messageback", source, CuffsUP.HandsUP.Command.Ace.Warning.Message);
+				end	
+			end
+		end
+		if s_action == "CGrab" then
+			CuffsCanRunThis = CuffsUP.AceCheck(source, "GCommand")
+			if CuffsCanRunThis then
+				if type(b_npc) ~= "nil" and b_npc then
+					TriggerClientEvent("cuffsup:grabAI", source, tonumber(player));
+				else
+					TriggerClientEvent("cuffsup:grab", tonumber(player));
+				end
+			else
+				if CuffsUP.Grab.Command.Ace.Warning.Enabled then
+					TriggerClientEvent("cuffsup:messageback", source, CuffsUP.Grab.Command.Ace.Warning.Message);
+				end	
+			end
+		end
+		if s_action == "KGrab" then
+			CuffsCanRunThis = CuffsUP.AceCheck(source, "GKey")
+			if CuffsCanRunThis then
+				if type(b_npc) ~= "nil" and b_npc then
+					TriggerClientEvent("cuffsup:grabAI", source, tonumber(player));
+				else
+					TriggerClientEvent("cuffsup:grab", tonumber(player));
+				end
+			else
+				if CuffsUP.Grab.Key.Ace.Warning.Enabled then
+					TriggerClientEvent("cuffsup:messageback", source, CuffsUP.Grab.Key.Ace.Warning.Message);
+				end	
+			end
+		end
+		if s_action == "KCG" then
+			CuffsCanRunThis = CuffsUP.AceCheck(source, "CKey");
+			if CuffsCanRunThis then
+				CuffsCanRunThis = CuffsUP.AceCheck(source, "GKey");
+				if CuffsCanRunThis then
+					if type(b_npc) ~= "nil" and b_npc then
+						TriggerClientEvent("cuffsup:cuffgrabAI", source, tonumber(player));
+					else
+						TriggerClientEvent("cuffsup:cuffgrab", tonumber(player));
+				end
+				else
+					if CuffsUP.Grab.Key.Ace.Warning.Enabled then
+						TriggerClientEvent("cuffsup:messageback", source, CuffsUP.Grab.Key.Ace.Warning.Message);
+					end	
+				end
+			else
+				if CuffsUP.Cuffs.Key.Ace.Warning.Enabled then
+					TriggerClientEvent("cuffsup:messageback", source, CuffsUP.Cuffs.Key.Ace.Warning.Message);
+				end
+			end
 		end
 	else
-		if CuffsUP.Cuffs.Command.Ace.Warning.Enabled then
-			TriggerClientEvent("cuffsup:messageback", source, CuffsUP.Cuffs.Command.Ace.Warning.Message);
-		end	
+		TriggerClientEvent("cuffsup:messageback", source, type(s_action));
 	end
 end)
 
@@ -245,6 +356,14 @@ function CuffsUP.AceCheck(source, options)
 		end
 		if options == "CKey" then
 			CheckThisOption = CuffsUP.Cuffs.Key.Ace.Enabled;
+		end
+		-- Not sure why someone would want to do permission checks on grab but I added it.
+		if options == "GCommand" then
+			CheckThisOption = CuffsUP.Grab.Command.Ace.Enabled; 
+		end
+		-- Not sure why someone would want to do permission checks on grab but I added it.
+		if options == "GKey" then
+			CheckThisOption = CuffsUP.Grab.Key.Ace.Enabled;
 		end
 		-- Not sure why someone would want to do permission checks on hands up but I added it.
 		if options == "HCommand" then
