@@ -27,7 +27,6 @@ CuffsUP.Animation = {
 	}
 CuffsUP.Unarmed = GetHashKey("WEAPON_UNARMED");
 
-
 -- this will enable users to know about this command in the chat, but does not disable it, this function is created to respeat true RP users.
 if CuffsUP.OverRides.Viewable then
 	TriggerEvent("chat:addSuggestion", "/"..CuffsUP.OverRides.ChatCommand, CuffsUP.OverRides.ChatInformation, CuffsUP.OverRides.ChatArguments);
@@ -513,8 +512,6 @@ AddEventHandler("cuffsup:messageback", function(s_warning)
 	end
 end)
 
-
-
 function CuffsUP.Print(text_s, txt_b, options_t)
 	SetNotificationTextEntry("STRING");
 	AddTextComponentString(text_s)
@@ -539,7 +536,6 @@ function CuffsUP.TracePlayer()
 	end
 	return false
 end
-
 
 function CuffsUP.GetPedInFront()
 	local player = PlayerId()
