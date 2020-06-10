@@ -148,7 +148,7 @@ AddEventHandler("CheckAction", function(player, s_action, b_npc)
 			CuffsCanRunThis = CuffsUP.AceCheck(source, "GCommand")
 			if CuffsCanRunThis then
 				if type(b_npc) ~= "nil" and b_npc then
-					TriggerClientEvent("cuffsup:grabAI", source, tonumber(player));
+					TriggerClientEvent("cuffsup:grab", source, tonumber(player));
 				else
 					TriggerClientEvent("cuffsup:grab", tonumber(player));
 				end
@@ -162,9 +162,9 @@ AddEventHandler("CheckAction", function(player, s_action, b_npc)
 			CuffsCanRunThis = CuffsUP.AceCheck(source, "GKey")
 			if CuffsCanRunThis then
 				if type(b_npc) ~= "nil" and b_npc then
-					TriggerClientEvent("cuffsup:grabAI", source, tonumber(player));
+					TriggerClientEvent("cuffsup:grab", source, tonumber(player));
 				else
-					TriggerClientEvent("cuffsup:grab", tonumber(player));
+					TriggerClientEvent("cuffsup:grab", tonumber(player), true, source);
 				end
 			else
 				if CuffsUP.Grab.Key.Ace.Warning.Enabled then
@@ -180,8 +180,8 @@ AddEventHandler("CheckAction", function(player, s_action, b_npc)
 					if type(b_npc) ~= "nil" and b_npc then
 						TriggerClientEvent("cuffsup:cuffgrabAI", source, tonumber(player));
 					else
-						TriggerClientEvent("cuffsup:cuffgrab", tonumber(player));
-				end
+						TriggerClientEvent("cuffsup:cuffgrab", tonumber(player), true, source);
+					end
 				else
 					if CuffsUP.Grab.Key.Ace.Warning.Enabled then
 						TriggerClientEvent("cuffsup:messageback", source, CuffsUP.Grab.Key.Ace.Warning.Message);
@@ -203,7 +203,10 @@ AddEventHandler("Print", function(printthis)
 	print(tostring(printthis));
 end)
 
-
+RegisterServerEvent("cuffsup:returnmessageback")
+AddEventHandler("cuffsup:returnmessageback", function(n_SendTo, s_Message)
+	TriggerClientEvent("cuffsup:messageback", tonumber(n_SendTo), tostring(s_Message));
+end)
 RegisterCommand("CuffsUP", function(source, commands, raw)
 	if type(commands) ~= "nil" then
 		if type(commands[1]) ~= "nil" then

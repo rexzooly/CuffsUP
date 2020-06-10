@@ -18,7 +18,9 @@ CuffsUP.Animation = {
 		},
 		Grab = {
 			GrabbedBy = nil,
+			IsGrabbing = false,
 			HasBeenGrabbed = false,
+			IsGrabbed = false,
 			NCPID = nil,
 			HasNPCBeenGrabbed = false
 		}
@@ -190,27 +192,29 @@ if CuffsUP.Cuffs.Enabled then
 	end
 	
 	RegisterNetEvent("cuffsup:handcuff")
-	AddEventHandler("cuffsup:handcuff", function()
-		local player = PlayerId()
-		local plyPed = GetPlayerPed(player)
-		if DoesEntityExist(plyPed) then
-			if IsEntityPlayingAnim(plyPed, CuffsUP.Animation.Handcuffs.Dict, CuffsUP.Animation.Handcuffs.Name, 3) then
-				ClearPedSecondaryTask(plyPed)
-				SetEnableHandcuffs(plyPed, false)
-				SetEnableHandcuffs(plyPed, false)
-				SetCurrentPedWeapon(plyPed, CuffsUP.Unarmed, true)
+	AddEventHandler("cuffsup:handcuff", function(npc)
+		if type(npc) ~= "nil" then
+			CuffplyPed = npc
+		end
+		Cuffplayer = PlayerId()
+		CuffplyPed = GetPlayerPed(Cuffplayer)
+		if DoesEntityExist(CuffplyPed) then
+			if IsEntityPlayingAnim(CuffplyPed, CuffsUP.Animation.Handcuffs.Dict, CuffsUP.Animation.Handcuffs.Name, 3) then
+				ClearPedSecondaryTask(CuffplyPed)
+				SetEnableHandcuffs(CuffplyPed, false)
+				SetCurrentPedWeapon(CuffplyPed, CuffsUP.Unarmed, true)
 				CuffsUP.Animation.Handcuffs.IsHandsCuffed = false
 			else
 				CuffsUP.Animation.HandsUP.IsHandsUP = false;
-				ClearPedTasksImmediately(plyPed)
+				ClearPedTasksImmediately(CuffplyPed)
 				RequestAnimDict(CuffsUP.Animation.Handcuffs.Dict)
 				while not HasAnimDictLoaded(CuffsUP.Animation.Handcuffs.Dict) do
 					Citizen.Wait(1)
 				end
 
-				TaskPlayAnim(plyPed, CuffsUP.Animation.Handcuffs.Dict, CuffsUP.Animation.Handcuffs.Name, 8.0, -8, -1, 49, 0, 0, 0, 0)
-				SetEnableHandcuffs(plyPed, true)
-				SetCurrentPedWeapon(plyPed, CuffsUP.Unarmed, true)
+				TaskPlayAnim(CuffplyPed, CuffsUP.Animation.Handcuffs.Dict, CuffsUP.Animation.Handcuffs.Name, 8.0, -8, -1, 49, 0, 0, 0, 0)
+				SetEnableHandcuffs(CuffplyPed, true)
+				SetCurrentPedWeapon(CuffplyPed, CuffsUP.Unarmed, true)
 				CuffsUP.Animation.Handcuffs.IsHandsCuffed = true
 			end
 		end
@@ -237,6 +241,8 @@ if CuffsUP.Cuffs.Enabled then
 					handcuffedAI = false
 					ClearPedSecondaryTask(plyPed);
 					ClearPedTasksImmediately(plyPed);
+					SetEnableHandcuffs(plyPed, false)
+					SetCurrentPedWeapon(plyPed, CuffsUP.Unarmed, true)
 				else
 					CuffsUP.Animation.HandsUP.IsHandsUP = false
 					handcuffedAI = true
@@ -274,17 +280,25 @@ if CuffsUP.Cuffs.Enabled then
 						if IsControlPressed(0, 155) then
 							if IsControlJustPressed(0, CuffsUP.Cuffs.Key.vKey) then
 								if CuffsUP.Animation.Grab.HasNPCBeenGrabbed then
-									TriggerEvent("cuffsup:cuffgrabAI");
+									TriggerEvent("cuffsup:cuffgrabAI", CuffsUP.Animation.Grab.NCPID, true);
 								else
-									DoTrace, IsAI = CuffsUP.TracePlayer()
-									if DoTrace ~= false then
-										if not IsAI then
-											TriggerServerEvent("CheckAction", DoTrace, "KCG");
-										else
-											if CuffsUP.Cuffs.NPC then
-												TriggerServerEvent("CheckAction", DoTrace, "KCG", true);
+									if not CuffsUP.Animation.Grab.IsGrabbing then
+										DoTrace, IsAI = CuffsUP.TracePlayer()
+										if DoTrace ~= false then
+											if not IsAI then
+												CuffsUP.Animation.Grab.IsGrabbing = true
+												TriggerServerEvent("CheckAction", DoTrace, "KCG");
+											else
+												if CuffsUP.Cuffs.NPC then
+													TriggerServerEvent("CheckAction", DoTrace, "KCG", true);
+												end
 											end
+										else
+											TriggerServerEvent("CheckAction", "1", "KCG", true);
 										end
+									else
+										CuffsUP.Animation.Grab.IsGrabbing = false
+										TriggerServerEvent("CheckAction", DoTrace, "KCG");
 									end
 								end
 							end
@@ -323,25 +337,32 @@ if CuffsUP.Cuffs.Enabled then
 end
 if CuffsUP.Grab.Enabled then
 	RegisterNetEvent("cuffsup:grab")
-	AddEventHandler("cuffsup:grab", function(source)	
+	AddEventHandler("cuffsup:grab", function(npc, source)
 		if CuffsUP.Animation.Grab.HasNPCBeenGrabbed then
-			TriggerEvent("cuffsup:grabAI");
+			CuffsUP.DoAIGrab(CuffsUP.Animation.Grab.NCPID);
 		else
-			CuffsUP.Animation.Grab.GrabbedBy = source
-			CuffsUP.Animation.Grab.HasBeenGrabbed = not CuffsUP.Animation.Grab.HasBeenGrabbed
+			GrabNPC = type(npc);
+			if GrabNPC ~= "nil" and GrabNPC ~= "boolean" then
+				if not CuffsUP.Animation.Grab.HasBeenGrabbed then
+					CuffsUP.DoAIGrab(npc);
+				end
+			else
+				CuffsUP.Animation.Grab.GrabbedBy = GetPlayerFromServerId(source);
+				CuffsUP.Animation.Grab.HasBeenGrabbed = not CuffsUP.Animation.Grab.HasBeenGrabbed
+			end
 		end
 	end)
 	RegisterNetEvent("cuffsup:grabcommand")
 	AddEventHandler("cuffsup:grabcommand", function(source)	
 		if CuffsUP.Animation.Grab.HasNPCBeenGrabbed then
-			TriggerEvent("cuffsup:grabAI");
+			CuffsUP.DoAIGrab(CuffsUP.Animation.Grab);
 		else
 			DoTrace, IsAI = CuffsUP.TracePlayer()
 			if DoTrace ~= false then
 				if not IsAI then
 					TriggerServerEvent("CheckAction", DoTrace, "CGrab");
 				else
-					TriggerServerEvent("CheckAction", DoTrace, "CGrab", true);
+					CuffsUP.DoAIGrab(CuffsUP.Animation.Grab);
 				end
 			end
 		end
@@ -372,28 +393,37 @@ if CuffsUP.Grab.Enabled then
 					if not IsPedInAnyVehicle(plyPed, false) then
 						if IsControlJustPressed(0, CuffsUP.Grab.Key.vKey) then
 							if CuffsUP.Animation.Grab.HasNPCBeenGrabbed then
-								TriggerEvent("cuffsup:grabAI");
+								CuffsUP.DoAIGrab(CuffsUP.Animation.Grab.NCPID);
 							else
-								DoTrace, IsAI = CuffsUP.TracePlayer()
-								if DoTrace ~= false then
-									if not IsAI then
-										TriggerServerEvent("CheckAction", DoTrace, "KGrab");
-									else
-										TriggerServerEvent("CheckAction", DoTrace, "KGrab", true);
+								if not CuffsUP.Animation.Grab.IsGrabbing then
+									DoTrace, IsAI = CuffsUP.TracePlayer();
+									if DoTrace ~= false then
+										if not IsAI then
+											CuffsUP.Animation.Grab.IsGrabbing = true
+											TriggerServerEvent("CheckAction", DoTrace, "KGrab");
+										else
+											CuffsUP.DoAIGrab(DoTrace);
+										end
 									end
+								else
+									CuffsUP.Animation.Grab.IsGrabbing = false
+									TriggerServerEvent("CheckAction", DoTrace, "KGrab");
 								end
 							end
 						end
 					end
 				end			
 			end
-			if CuffsUP.Animation.Grab.HasBeenGrabbed then
-				IsGrabbed = true
-				AttachEntityToEntity(PlayerPedId(), GetPlayerPed(GetPlayerFromServerId(CuffsUP.Animation.Grab.GrabbedBy)), 4103, 11816, 0.48, 0.00, 0.0, 0.0, 0.0, 0.0, false, false, false, false, 2, true)
+			if CuffsUP.Animation.Grab.HasBeenGrabbed and not CuffsUP.Animation.Grab.IsGrabbed then
+				CuffsUP.Animation.Grab.IsGrabbed = true;
+				AttachEntityToEntity(plyPed, GetPlayerPed(CuffsUP.Animation.Grab.GrabbedBy), 4103, 11816, 0.48, 0.00, 0.0, 0.0, 0.0, 0.0, false, false, false, false, 2, true);
 			else
-				if not IsPedInParachuteFreeFall(PlayerPedId()) and IsGrabbed then
-					IsGrabbed = false
-					DetachEntity(PlayerPedId(), true, false)    
+				if not CuffsUP.Animation.Grab.HasBeenGrabbed and CuffsUP.Animation.Grab.IsGrabbed then
+					if not IsPedInParachuteFreeFall(plyPed) then
+						CuffsUP.Animation.Grab.IsGrabbed = false;
+						DetachEntity(plyPed, true, false); 
+						CuffsUP.Animation.Grab.GrabbedBy = nil;
+					end
 				end
 			end
 		end
@@ -401,17 +431,16 @@ if CuffsUP.Grab.Enabled then
 end
 
 RegisterNetEvent("cuffsup:cuffgrab")
-AddEventHandler("cuffsup:cuffgrab", function(DoTrace)
+AddEventHandler("cuffsup:cuffgrab", function(npc, DoTrace)
 	local player = PlayerId()
 	local plyPed = GetPlayerPed(player)
 	if DoesEntityExist(plyPed) then
 		if IsEntityPlayingAnim(plyPed, CuffsUP.Animation.Handcuffs.Dict, CuffsUP.Animation.Handcuffs.Name, 3) then
 			ClearPedSecondaryTask(plyPed)
 			SetEnableHandcuffs(plyPed, false)
-			SetEnableHandcuffs(plyPed, false)
 			SetCurrentPedWeapon(plyPed, CuffsUP.Unarmed, true)
 			CuffsUP.Animation.Handcuffs.IsHandsCuffed = false
-			TriggerServerEvent("CheckAction", plyPed, "KGrab");
+			TriggerEvent("cuffsup:grab", true, DoTrace);
 		else
 			CuffsUP.Animation.HandsUP.IsHandsUP = false;
 			ClearPedTasksImmediately(plyPed)
@@ -424,7 +453,7 @@ AddEventHandler("cuffsup:cuffgrab", function(DoTrace)
 			SetEnableHandcuffs(plyPed, true)
 			SetCurrentPedWeapon(plyPed, CuffsUP.Unarmed, true)
 			CuffsUP.Animation.Handcuffs.IsHandsCuffed = true
-			TriggerServerEvent("CheckAction", plyPed, "KGrab");
+			TriggerEvent("cuffsup:grab", true, DoTrace);
 		end
 	end
 end)
@@ -436,16 +465,19 @@ AddEventHandler("cuffsup:cuffgrabAI", function(Ent, IsAI)
 			plyPed = CuffsUP.Animation.Grab.NCPID
 		end
 	end
-	if DoesEntityExist(plyPed) or CuffsUP.Animation.Grab.HasNPCBeenGrabbed then
-		if IsEntityPlayingAnim(plyPed, CuffsUP.Animation.Handcuffs.Dict, CuffsUP.Animation.Handcuffs.Name, 3) then
-			handcuffedAI = false
-			ClearPedSecondaryTask(plyPed);
-			ClearPedTasksImmediately(plyPed);
-			DetachEntity(plyPed, true, false);
-			DetachEntity(CuffsUP.Animation.Grab.NCPID, true, false);
-			CuffsUP.Animation.Grab.HasNPCBeenGrabbed = false;
-			CuffsUP.Animation.Grab.NCPID = nil;
-		else
+	if CuffsUP.Animation.Grab.HasNPCBeenGrabbed then
+		DetachEntity(plyPed, true, false);
+		DetachEntity(GetPlayerPed(PlayerId()), true, false);
+		ClearPedTasksImmediately(plyPed);
+		ClearPedSecondaryTask(plyPed);
+		SetEnableHandcuffs(plyPed, false);
+		SetCurrentPedWeapon(plyPed, CuffsUP.Unarmed, true)
+		SetPedAsEnemy(plyPed,false);
+		UncuffPed(plyPed)
+		CuffsUP.Animation.Grab.HasNPCBeenGrabbed = false;
+		CuffsUP.Animation.Grab.NCPID = nil;
+	else
+		if DoesEntityExist(plyPed) then
 			handcuffedAI = true
 			ClearPedSecondaryTask(plyPed);
 			ClearPedTasksImmediately(plyPed);
@@ -455,9 +487,12 @@ AddEventHandler("cuffsup:cuffgrabAI", function(Ent, IsAI)
 				Citizen.Wait(1)
 			end
 			TaskPlayAnim(plyPed, CuffsUP.Animation.Handcuffs.Dict, CuffsUP.Animation.Handcuffs.Name, 8.0, -8, -1, 49, 0, 0, 0, 0)
+			SetEnableHandcuffs(plyPed, true)
+			SetCurrentPedWeapon(plyPed, CuffsUP.Unarmed, true)
 			CuffsUP.Animation.Grab.HasNPCBeenGrabbed = true;
 			CuffsUP.Animation.Grab.NCPID = plyPed;
 			AttachEntityToEntity(plyPed, GetPlayerPed(PlayerId()), 4103, 11816, 0.48, 0.00, 0.0, 0.0, 0.0, 0.0, false, false, false, false, 2, true)
+			SetPedAsEnemy(plyPed,false);
 		end
 	end
 end)
@@ -523,4 +558,18 @@ function CuffsUP.GetPlayerFromPed(ped)
 		end
 	end
 	return -1
+end
+function CuffsUP.DoAIGrab(npcid)
+	local Grabplayer = PlayerId()
+	local GrabplyPed = GetPlayerPed(Grabplayer)
+	if not CuffsUP.Animation.Grab.HasNPCBeenGrabbed then
+		CuffsUP.Animation.Grab.HasNPCBeenGrabbed = true;
+		CuffsUP.Animation.Grab.NCPID = npcid;
+		AttachEntityToEntity(CuffsUP.Animation.Grab.NCPID, GrabplyPed, 4103, 11816, 0.48, 0.00, 0.0, 0.0, 0.0, 0.0, false, false, false, false, 2, true)
+	else
+		CuffsUP.Animation.Grab.HasNPCBeenGrabbed = false;
+		DetachEntity(GrabplyPed, true, false);
+		DetachEntity(CuffsUP.Animation.Grab.NCPID, true, false);
+		CuffsUP.Animation.Grab.NCPID = nil;
+	end
 end
