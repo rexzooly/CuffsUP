@@ -10,11 +10,26 @@ With this version you are able to config almost everything in the script
 clone the resource as a zip to download it, unzip and rename CuffsUP-master to CuffsUP 
 place in your resource folder and update your server config
 we support the newer format fxmanifest so I believe this will only work on newer servers
-in the server config put **ensure CuffsUP** and then save your server config, if the server was
+in the server config put **ensure CuffsUP** and also add the Ace commands
+
+### Ace
+```
+add_ace group.cubasic cuffsup.hu allow					# Sets up basic, add this but use the config to enable or disable the need for it.
+add_ace group.cuofficer cuffsup.cuff allow				# Sets up officers, add this but use the config to enable or disable the need for it.
+add_ace group.cuowner cuffsup.boss allow 				# Sets up Owner, this is needed for the owner to fully test all functions.
+add_principal group.cuofficer group.cubasic 			# Lets officers put there hands up is basic permssions are on
+add_principal group.cuowner group.cuofficer 			# Let Owner of script as officer, good idea for testing.
+add_principal group.admin group.cuofficer				# Optional this sets admins as officers.
+add_principal group.owner group.cuowner 				# Optional this sets Owner as Owner of the script
+#add_principal identifier.steam:110000000000000 group.cubasic  		#Example to add a user to hands up if you enable it, I advice you don't 
+#add_principal identifier.steam:110000000000000 group.cuofficer		#Example to add a user as a officer to use /cuffs command no need for basic
+#add_principal identifier.steam:110000000000000 group.cuowner		#Example to set users as owner of the script, give them access to all commands no need for officer or basic.
+```
+then save your server config, if the server was
 running and you want to tset without a restart do in game **/refresh** and then **/start** CuffsUP in chat or **refresh** and **start** CuffsUP in F8
 
 ### Upgrade
-Delete the mod fully from your server, you can leave the server config as we wont change the resource name on updates and delete any cache from the server and
+Delete the mod fully from your server delete any cache from the server and
 clients then place the newer version in to your resource folder, steps above will help you if you forgot how to do it the first time.
 
 ### Changes
@@ -31,11 +46,11 @@ clients then place the newer version in to your resource folder, steps above wil
 * Enable or disabled each section - **configurable**
 * Change commands in the config - **configurable**
 * Notification options, you can now set them to not show, show on screen or in the chat - **configurable*
+* Ace Permissions Support - **configurable**
 
 ### How to use
 Coming soon. for now please read our FiveM post [Here](https://forum.cfx.re/t/release-cuffsup-originally-known-as-handcuff-and-handsup-scripts-by-xander1998/1319846)
 
-### Fixed
-When I was updating this script with all the needed extras to make it what everyone wanted I only saw one problem
-and that one of the returned checked for a a verb that wasn't in the script, it was looking for **targetedPlayer** but before it was
-setting **targetplayer**, simple fix
+
+### Note:
+CuffsUP as changed in to it's own beast so as much as this was based on [xander1998](https://github.com/xander1998) script to start with please don't pester him at all about anything I have done in this script, please use the issus tab to get help on this script thanks.
