@@ -1,6 +1,6 @@
 --[[
 	CuffsUP originally known as Handcuff and Handsup scripts 
-	Version 1.0.0.1
+	Version 1.0.0.2
 	By BadKaiPanda[NavaRayUK(Rexzooly)] & Xander1998 (X. Cross)
 ]]--
 
@@ -17,15 +17,14 @@ CuffsUP.Animation = {
 			IsHandsCuffed = false
 		}
 	}
-CuffsUP.Unarmed = GetHashKey("WEAPON_UNARMED");
-
-
+CuffsUP.Unarmed = GetHashKey("WEAPON_UNARMED"); -- don't remove. will be included in above table in the future.
 
 -- this will enable users to know about this command in the chat, but does not disable it, this function is created to respeat true RP users.
 if CuffsUP.OverRides.Viewable then
 	TriggerEvent("chat:addSuggestion", "/"..CuffsUP.OverRides.ChatCommand, CuffsUP.OverRides.ChatInformation, CuffsUP.OverRides.ChatArguments);
 end
 
+-- Sets all script messages to mute
 RegisterNetEvent("cuffsup:mutemode")
 AddEventHandler("cuffsup:mutemode", function()
 	CuffsUP.Client.Note.Mode = 0;
@@ -39,6 +38,7 @@ AddEventHandler("cuffsup:mutemode", function()
 	end
 end)
 
+-- Sets Messages shown in dialog mode
 RegisterNetEvent("cuffsup:displaymode")
 AddEventHandler("cuffsup:displaymode", function()
 	CuffsUP.Client.Note.Mode = 2;
@@ -52,6 +52,7 @@ AddEventHandler("cuffsup:displaymode", function()
 	end		
 end)
 
+-- Sets Messages shown in chat mode
 RegisterNetEvent("cuffsup:chatmode")
 AddEventHandler("cuffsup:chatmode", function()
 	CuffsUP.Client.Note.Mode = 1;
@@ -65,6 +66,7 @@ AddEventHandler("cuffsup:chatmode", function()
 	end		
 end)
 
+-- Resets the mods messages are shown
 RegisterNetEvent("cuffsup:reset")
 AddEventHandler("cuffsup:reset", function()
 	CuffsUP.Client.Note.Mode = nil;
@@ -78,6 +80,12 @@ AddEventHandler("cuffsup:reset", function()
 	end		
 end)
 
+-- Updates clients Cache based on servers cached settings (future)
+RegisterNetEvent("CacheUpdate")
+AddEventHandler("CacheUpdate", function(cache, optoin)
+	-- future functionality
+end)
+--- Dose the hands uo if enabled
 if CuffsUP.HandsUP.Enabled then
 	-- Set up Handsup
 	if CuffsUP.HandsUP.Command.Enabled then
@@ -173,6 +181,8 @@ if CuffsUP.HandsUP.Enabled then
 		end
 	end)
 end
+
+--- Dose the cuffs if enabled
 if CuffsUP.Cuffs.Enabled then
 	-- Set up Cuff
 	if CuffsUP.Cuffs.Command.Enabled then
@@ -256,7 +266,7 @@ if CuffsUP.Cuffs.Enabled then
 									TriggerServerEvent("CheckHandcuff", DoTrace);
 								else
 									if CuffsUP.Cuffs.NPC then
-										TriggerEvent("cuffsup:handcuffAI", DoTrace);
+										TriggerServerEvent("CheckHandcuff", DoTrace, true);
 									end
 								end
 							end
@@ -293,6 +303,26 @@ if CuffsUP.Cuffs.Enabled then
 		end
 	end)
 end
+
+-- Mostly used for testing but it's a back and forth print message option from server to client.
+RegisterNetEvent("cuffsup:messageback")
+AddEventHandler("cuffsup:messageback", function(s_warning)
+	DisplayMode = CuffsUP.Note;
+	if type(CuffsUP.Client.Note.Mode) ~= "nil" then
+		DisplayMode.Mode = CuffsUP.Client.Note.Mode;
+	end
+	if DisplayMode.Mode > 0 then
+		if DisplayMode.Mode == 1 then
+			TriggerEvent("chatMessage", s_warning);
+		else
+			CuffsUP.Print(s_warning);
+		end
+	else
+		CuffsUP.Print(s_warning);
+	end
+end)
+
+-- prints the message in game in the bottom left
 function CuffsUP.Print(text_s, txt_b, options_t)
 	SetNotificationTextEntry("STRING");
 	AddTextComponentString(text_s)
@@ -318,7 +348,7 @@ function CuffsUP.TracePlayer()
 	return false
 end
 
-
+-- Checks for the player in front of the player
 function CuffsUP.GetPedInFront()
 	local player = PlayerId()
 	local plyPed = GetPlayerPed(player)
@@ -329,7 +359,9 @@ function CuffsUP.GetPedInFront()
 	return ped
 end
 
-function CuffsUP.GetPlayerFromPed(ped)
+-- Counts the player listand returns a ped
+function CuffsUP.GetPlayerFromPed(ped, n_count)
+	-- n_count will be used in the future for larger based servers.
 	for a = 0, 64 do
 		if GetPlayerPed(a) == ped then
 			return a
