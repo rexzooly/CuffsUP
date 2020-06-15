@@ -1,92 +1,129 @@
 --[[
 	CuffsUP originally known as Handcuff and Handsup scripts 
-	Version 1.0.0.3
+	Version 1.0.0.4
 	By BadKaiPanda[NavaRayUK(Rexzooly)] & Xander1998 (X. Cross)
 ]]--
 CuffsUP.Server = {}
-AddEventHandler('chatMessage', function(source, name, msg)
-	cl = stringsplit(msg, " ");
-	-- Check if we can even run the handsup function as a command 
-	if CuffsUP.HandsUP.Command.Enabled then
-		if cl[1] == "/"..CuffsUP.HandsUP.Command.ChatCommand then
-			CancelEvent();
-			HandsCanRunThis = CuffsUP.AceCheck(source, "HCommand")
-			if HandsCanRunThis then
-				TriggerClientEvent("cuffsup:Handsup", source);
-			else
-				if CuffsUP.HandsUP.Command.Ace.Warning.Enabled then
-					TriggerClientEvent("cuffsup:messageback", source, CuffsUP.HandsUP.Command.Ace.Warning.Message);
-				end		
-			end
-		end
-	end
-	
-	-- Leave this commands RP users have the right to stop messages from scripts let them use these overrides.
-	if cl[1] == "/curp" then
-		CancelEvent();
-		if type(cl[2]) == "string" then
-			if cl[2] == "mute" then
-				TriggerClientEvent("cuffsup:mutemode", source);
-			end
-			if cl[2] == "display" then
-				TriggerClientEvent("cuffsup:displaymode", source);
-			end
-			if cl[2] == "chat" then
-				TriggerClientEvent("cuffsup:chatmode", source);
-			end
-			if cl[2] == "reset" then
-				TriggerClientEvent("cuffsup:reset", source);
-			end
-		end
-	end	
-	
-	-- Check if we can even run the Cuffs function as a command 
-	if CuffsUP.Cuffs.Command.Enabled then
-		if cl[1] == "/"..CuffsUP.Cuffs.Command.ChatCommand then
-			CancelEvent();
-			-- Check if the user is able to run this command.	
-			CuffsCanRunThis = CuffsUP.AceCheck(source, "CCommand")
-		
-			if CuffsCanRunThis then
-				if type(cl[2]) ~= "nil" then
-					TriggerClientEvent("cuffsup:handcuff", tonumber(cl[2]))
+if CuffsUP.HandsUP.Command.Enabled then
+	RegisterCommand(CuffsUP.HandsUP.Command.ChatCommand , function(source, name, raw)
+		if source > 0 then
+			cl, cltable = stringsplit(raw, " ");
+			-- Check if we can even run the handsup function as a command 
+			if cl[1] == CuffsUP.HandsUP.Command.ChatCommand or  cl == CuffsUP.HandsUP.Command.ChatCommand then
+				CancelEvent();
+				HandsCanRunThis = CuffsUP.AceCheck(source, "HCommand")
+				if HandsCanRunThis then
+					TriggerClientEvent("cuffsup:Handsup", source);
 				else
-					TriggerClientEvent("cuffsup:handcuffcommand", source);
-				end
-			else
-				if CuffsUP.Cuffs.Command.Ace.Warning.Enabled then
-					TriggerClientEvent("cuffsup:messageback", source, CuffsUP.Cuffs.Command.Ace.Warning.Message);
+					if CuffsUP.HandsUP.Command.Ace.Warning.Enabled then
+						TriggerClientEvent("cuffsup:messageback", source, CuffsUP.HandsUP.Command.Ace.Warning.Message);
+					end		
 				end
 			end
 		end
-		if cl[1] == "/curank" then
-			CancelEvent();
-			CuffsCanRunThis, SourceRank = CuffsUP.AceCheck(source);
-			TriggerClientEvent("cuffsup:messageback", source, SourceRank);
+	end, false)
+end
+RegisterCommand("curp", function(source, arg, raw)
+	if source > 0 then
+		cl, cltable = stringsplit(raw, " ");
+		if cltable then
+			if cl[1] == "curp" then
+				CancelEvent();
+				if type(cl[2]) == "string" then
+					if cl[2] == "mute" then
+						TriggerClientEvent("cuffsup:mutemode", source);
+					end
+					if cl[2] == "display" then
+						TriggerClientEvent("cuffsup:displaymode", source);
+					end
+					if cl[2] == "chat" then
+						TriggerClientEvent("cuffsup:chatmode", source);
+					end
+					if cl[2] == "reset" then
+						TriggerClientEvent("cuffsup:reset", source);
+					end
+				end
+			end
+		else
+			if cl == "curp" then
+				TriggerClientEvent("cuffsup:messageback", source, "Please use the command with the correct syntax command {mute,chat,display,none}!")
+			end
 		end
+	else
+		print("^2CuffsUP^0: This command is for in-game RP/Streamers, no server admins.");
 	end
-	
-	-- Grab function
-	if CuffsUP.Grab.Command.Enabled then
-		if cl[1] == "/"..CuffsUP.Grab.Command.ChatCommand then
-			CancelEvent();
-			GrabCanRunThis, SourceRank = CuffsUP.AceCheck(source, "GCommand");
+end, false) 
 
-			if GrabCanRunThis then
-				if type(cl[2]) ~= "nil" then
-					TriggerClientEvent("cuffsup:grab", cl[2]);
-				else
-					TriggerClientEvent("cuffsup:grabcommand", source);
+if CuffsUP.Cuffs.Command.Enabled then
+	RegisterCommand(CuffsUP.Cuffs.Command.ChatCommand, function(source, arg, raw)
+		if source > 0 then
+			cl, cltable = stringsplit(raw, " ");
+			if cltable then
+				if cl[1] == CuffsUP.Cuffs.Command.ChatCommand then
+					CancelEvent();
+					-- Check if the user is able to run this command.	
+					CuffsCanRunThis = CuffsUP.AceCheck(source, "CCommand")
+				
+					if CuffsCanRunThis then
+						if type(cl[2]) ~= "nil" then
+							TriggerClientEvent("cuffsup:handcuff", tonumber(cl[2]))
+						else
+							TriggerClientEvent("cuffsup:handcuffcommand", source);
+						end
+					else
+						if CuffsUP.Cuffs.Command.Ace.Warning.Enabled then
+							TriggerClientEvent("cuffsup:messageback", source, CuffsUP.Cuffs.Command.Ace.Warning.Message);
+						end
+					end
 				end
 			else
-				if CuffsUP.Grab.Command.Ace.Warning.Enabled then
-					TriggerClientEvent("cuffsup:messageback", source, CuffsUP.Grab.Command.Ace.Warning.Message);
-				end		
+				TriggerClientEvent("cuffsup:messageback", source, "no ID to cuff.");
 			end
+		else
+			print("^2CuffsUP^0: This command wont work via the server, this is a in-game command.")
 		end
-	end
-	
-end)
+	end, false);
+end
+
+if CuffsUP.Grab.Command.Enabled then 
+	RegisterCommand(CuffsUP.Grab.Command.ChatCommand, function(source, arg, raw)
+		if source > 0 then
+			cl, cltable = stringsplit(raw, " ");
+			if cltable then
+				if cl[1] == CuffsUP.Grab.Command.ChatCommand then
+					CancelEvent();
+					GrabCanRunThis, SourceRank = CuffsUP.AceCheck(source, "GCommand");
+
+					if GrabCanRunThis then
+						if type(cl[2]) ~= "nil" then
+							if source == tonumber(cl[2]);
+								TriggerClientEvent("cuffsup:messageback", source, "This was a bad idea and would of crashed your client so I stopped this action.");
+							else
+								TriggerClientEvent("cuffsup:grab", cl[2]);
+							end
+						else
+							TriggerClientEvent("cuffsup:grabcommand", source);
+						end
+					else
+						if CuffsUP.Grab.Command.Ace.Warning.Enabled then
+							TriggerClientEvent("cuffsup:messageback", source, CuffsUP.Grab.Command.Ace.Warning.Message);
+						end		
+					end
+				end
+			else
+				TriggerClientEvent("cuffsup:messageback", source, "No ID to grab");
+			end
+		else
+			print("^2CuffsUP^0: This command wont work via the server, this is a in-game command.")
+		end
+	end, false);
+end
+
+RegisterCommand("curank", function(source, arg, raw)
+	CancelEvent();
+	CuffsCanRunThis, SourceRank = CuffsUP.AceCheck(source);
+	TriggerClientEvent("cuffsup:messageback", source, SourceRank);
+end, false);
 
 ---------------------------------------------------------------------------
 -- Check This For Maybe Allowed Users?
@@ -203,7 +240,7 @@ AddEventHandler("Print", function(printthis)
 	print(tostring(printthis));
 end)
 
-RegisterServerEvent("cuffsup:returnmessageback")
+RegisterServerEvent("")
 AddEventHandler("cuffsup:returnmessageback", function(n_SendTo, s_Message)
 	TriggerClientEvent("cuffsup:messageback", tonumber(n_SendTo), tostring(s_Message));
 end)
@@ -414,10 +451,14 @@ function stringsplit(inputstr, sep)
 	if sep == nil then
 		sep = "%s"
 	end
-	local t={} ; i=1
+	local t = {}; i = 1
 	for str in string.gmatch(inputstr, "([^"..sep.."]+)") do
 		t[i] = str
 		i = i + 1
 	end
-	return t
+	if #t > 1 then
+		return t, true
+	else
+		return inputstr, false
+	end
 end

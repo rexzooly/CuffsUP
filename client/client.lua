@@ -1,6 +1,6 @@
 --[[
 	CuffsUP originally known as Handcuff and Handsup scripts 
-	Version 1.0.0.2
+	Version 1.0.0.4
 	By BadKaiPanda[NavaRayUK(Rexzooly)] & Xander1998 (X. Cross)
 ]]--
 
@@ -26,6 +26,7 @@ CuffsUP.Animation = {
 		}
 	}
 CuffsUP.Unarmed = GetHashKey("WEAPON_UNARMED");
+
 
 -- this will enable users to know about this command in the chat, but does not disable it, this function is created to respeat true RP users.
 if CuffsUP.OverRides.Viewable then
@@ -512,6 +513,8 @@ AddEventHandler("cuffsup:messageback", function(s_warning)
 	end
 end)
 
+
+
 function CuffsUP.Print(text_s, txt_b, options_t)
 	SetNotificationTextEntry("STRING");
 	AddTextComponentString(text_s)
@@ -536,6 +539,7 @@ function CuffsUP.TracePlayer()
 	end
 	return false
 end
+
 
 function CuffsUP.GetPedInFront()
 	local player = PlayerId()

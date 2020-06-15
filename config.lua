@@ -1,6 +1,6 @@
 --[[
 	CuffsUP originally known as Handcuff and Handsup scripts 
-	Version 1.0.0.3
+	Version 1.0.0.4
 	By BadKaiPanda[NavaRayUK(Rexzooly)] & Xander1998 (X. Cross)
 ]]--
 
@@ -29,12 +29,12 @@ NoteMode = {
 	Main config section.
 ]]-- 
 CuffsUP = {
-	Version = 	"1.0.0.3",										-- Version needed don't change it or it will brake the updater
-	Branch =	"dev",										-- Branch to check with don't delete or change this.
-	Author = "By BadKaiPanda[NavaRayUK(Rexzooly)] & Xander1998 (X. Cross)",   -- Please be respectful and leave this. Default: By BadKaiPanda[NavaRayUK(Rexzooly)] & Xander1998 (X. Cross)
-	OverRides = {												-- This is for the true RP users that don't want to see messages for this script, I advice you not to edit this.
-		Viewable = true,										-- You can disable it from been shown in chat so only your streamers and RP users can use it - Default: true
-		ChatCommand = "cuffsup",								
+	Version = 	"1.0.0.4",														-- Version needed don't change it or it will brake the updater
+	Branch =	"master",															-- Branch to check with don't delete or change this.
+	Author = "By BadKaiPanda[NavaRayUK(Rexzooly)] & Xander1998 (X. Cross)",  	-- Please be respectful and leave this. Default: By BadKaiPanda[NavaRayUK(Rexzooly)] & Xander1998 (X. Cross)
+	OverRides = {																-- This is for the true RP users that don't want to see messages for this script, I advice you not to edit this.
+		Viewable = true,														-- You can disable it from been shown in chat so only your streamers and RP users can use it - Default: true
+		ChatCommand = "curp",								
 		ChatInformation = "This function lets RP users pick there notification options",
 		ChatArguments = {
 			{
