@@ -96,7 +96,7 @@ if CuffsUP.Grab.Command.Enabled then
 
 					if GrabCanRunThis then
 						if type(cl[2]) ~= "nil" then
-							if source == tonumber(cl[2]);
+							if source == tonumber(cl[2]) then
 								TriggerClientEvent("cuffsup:messageback", source, "This was a bad idea and would of crashed your client so I stopped this action.");
 							else
 								TriggerClientEvent("cuffsup:grab", cl[2]);
