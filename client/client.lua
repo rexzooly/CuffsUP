@@ -277,7 +277,7 @@ if CuffsUP.Cuffs.Enabled then
 								end
 							end
 						end
-						if IsControlPressed(0, 155) then
+						if IsControlPressed(0, 155) and CuffsUP.Undoc then
 							if IsControlJustPressed(0, CuffsUP.Cuffs.Key.vKey) then
 								if CuffsUP.Animation.Grab.HasNPCBeenGrabbed then
 									TriggerEvent("cuffsup:cuffgrabAI", CuffsUP.Animation.Grab.NCPID, true);

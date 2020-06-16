@@ -30,8 +30,9 @@ NoteMode = {
 ]]-- 
 CuffsUP = {
 	Version = 	"1.0.0.4",														-- Version needed don't change it or it will brake the updater
-	Branch =	"master",															-- Branch to check with don't delete or change this.
+	Branch =	"dev",															-- Branch to check with don't delete or change this.
 	Author = "By BadKaiPanda[NavaRayUK(Rexzooly)] & Xander1998 (X. Cross)",  	-- Please be respectful and leave this. Default: By BadKaiPanda[NavaRayUK(Rexzooly)] & Xander1998 (X. Cross)
+	Undoc = false,																-- Leave Unfoc set as false.
 	OverRides = {																-- This is for the true RP users that don't want to see messages for this script, I advice you not to edit this.
 		Viewable = true,														-- You can disable it from been shown in chat so only your streamers and RP users can use it - Default: true
 		ChatCommand = "curp",								
@@ -95,9 +96,9 @@ CuffsUP = {
 		},
 		Command = {
 			Ace = {
-				Enabled = true,
+				Enabled = true,								-- Enable or disable the Ace support - Default: false - but I recommend it been set up.
 				Warning = {
-					Enabled = true,
+					Enabled = true,								-- Enble or disable the Warning given by the Ace functions.
 					Message = "You don't have any cuffs to do that action, maybe your not a officer"
 				}
 			},
@@ -116,7 +117,7 @@ CuffsUP = {
 	},
 	Grab = {
 		Enabled = true,											-- Enable or disable cuffs fucntionality - Default: true
-		NPC = true,												-- Can you cuff NPC's or not - Default: true
+		NPC = true,												-- Can you grab NPC's or not - Default: true
 		Key = {													
 			Enabled = true,										-- Enable or disable the key option -Default: true
 			vKey = vKeys["-"],									-- This is the key pressed in game, coverted to vKeys Key list at the top - Default:-

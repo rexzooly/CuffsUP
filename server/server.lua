@@ -85,7 +85,7 @@ if CuffsUP.Cuffs.Command.Enabled then
 	end, false);
 end
 
-if CuffsUP.Grab.Command.Enabled then 
+if CuffsUP.Grab.Command.Enabled and CuffsUP.Undoc then 
 	RegisterCommand(CuffsUP.Grab.Command.ChatCommand, function(source, arg, raw)
 		if source > 0 then
 			cl, cltable = stringsplit(raw, " ");
