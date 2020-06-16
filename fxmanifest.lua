@@ -1,6 +1,6 @@
 --[[
 	CuffsUP originally known as Handcuff and Handsup scripts 
-	Version 1.0.0.2
+	Version 1.0.0.3
 	By BadKaiPanda[NavaRayUK(Rexzooly)] & Xander1998 (X. Cross)
 ]]--
 
@@ -8,8 +8,8 @@ fx_version 'bodacious'
 game 'gta5'
 
 author 'BadKaiPanda[NavaRayUK(Rexzooly)] & Xander1998 (X. Cross)';
-description '[master branch]: CuffsUP';
-version '1.0.0.2';
+description '[grimly branch]: CuffsUP';
+version '1.0.0.3';
 
 server_scripts {
 	'config.lua',

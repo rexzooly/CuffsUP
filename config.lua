@@ -1,6 +1,6 @@
 --[[
 	CuffsUP originally known as Handcuff and Handsup scripts 
-	Version 1.0.0.2
+	Version 1.0.0.4
 	By BadKaiPanda[NavaRayUK(Rexzooly)] & Xander1998 (X. Cross)
 ]]--
 
@@ -16,7 +16,7 @@ vKeys = {
   ["LEFTCTRL"] = 36, ["LEFTALT"] = 19, ["SPACE"] = 22, ["RIGHTCTRL"] = 70,
   ["HOME"] = 213, ["PAGEUP"] = 10, ["PAGEDOWN"] = 11, ["DELETE"] = 178,
   ["LEFT"] = 174, ["RIGHT"] = 175, ["TOP"] = 27, ["DOWN"] = 173,
-  ["NENTER"] = 201, ["N4"] = 108, ["N5"] = 60, ["N6"] = 107, ["N+"] = 96, ["N-"] = 97, ["N7"] = 117, ["N8"] = 61, ["N9"] = 118
+  ["NENTER"] = 201, ["N4"] = 108, ["N5"] = 60, ["N6"] = 107, ["N+"] = 96, ["N-"] = 97, ["N7"] = 117, ["N8"] = 61, ["N9"] = 118, ["LShift"] = 155
 }
 NoteMode = {
 	Disabled = 0,			-- Disabled Option
@@ -29,11 +29,12 @@ NoteMode = {
 	Main config section.
 ]]-- 
 CuffsUP = {
-	Version = 	"1.0.0.2",										-- Version needed don't change it or it will brake the updater
-	Branch =	"master",										-- Branch to check with don't delete or change this.
-	Author = "By BadKaiPanda[NavaRayUK(Rexzooly)] & Xander1998 (X. Cross)",   -- Please be respectful and leave this. Default: By BadKaiPanda[NavaRayUK(Rexzooly)] & Xander1998 (X. Cross)
-	OverRides = {												-- This is for the true RP users that don't want to see messages for this script, I advice you not to edit this.
-		Viewable = true,										-- You can disable it from been shown in chat so only your streamers and RP users can use it - Default: true
+	Version = 	"1.0.0.4",														-- Version needed don't change it or it will brake the updater
+	Branch =	"master",															-- Branch to check with don't delete or change this.
+	Author = "By BadKaiPanda[NavaRayUK(Rexzooly)] & Xander1998 (X. Cross)",  	-- Please be respectful and leave this. Default: By BadKaiPanda[NavaRayUK(Rexzooly)] & Xander1998 (X. Cross)
+	Undoc = false,																-- Leave Unfoc set as false.
+	OverRides = {																-- This is for the true RP users that don't want to see messages for this script, I advice you not to edit this.
+		Viewable = true,														-- You can disable it from been shown in chat so only your streamers and RP users can use it - Default: true
 		ChatCommand = "curp",								
 		ChatInformation = "This function lets RP users pick there notification options",
 		ChatArguments = {
@@ -86,7 +87,7 @@ CuffsUP = {
 			Enabled = true,										-- Enable or disable the key option -Default: true
 			vKey = vKeys["U"],									-- This is the key pressed in game, coverted to vKeys Key list at the top - Default:U
 			Ace = {
-				Enabled = false,								-- Enable or disable Ace support, Default: false
+				Enabled = true,
 				Warning = {
 					Enabled = true,
 					Message = "You don't have any cuffs to do that action, maybe your not a officer"
@@ -95,15 +96,50 @@ CuffsUP = {
 		},
 		Command = {
 			Ace = {
-				Enabled = false,								-- Enable or disable Ace support, Default: false
+				Enabled = true,								-- Enable or disable the Ace support - Default: false - but I recommend it been set up.
 				Warning = {
-					Enabled = true,
+					Enabled = true,								-- Enble or disable the Warning given by the Ace functions.
 					Message = "You don't have any cuffs to do that action, maybe your not a officer"
 				}
 			},
 			Enabled = true,										-- Enable and disabled the Command fucntionality - Default:true
 			ChatCommand = "cuff",								-- The command in the chat - Default: cuff
-			ChatInformation = "Toggles the cuffs",				-- What it says in the chat when you start typing the command - Default: Toggle hands up and down.
+			ChatInformation = "Toggles the cuffs",				-- What it says in the chat when you start typing the command - Default: Toggles the cuffs.
+			ChatArguments = {
+				{
+					name = "Player ID - Optional",				-- The main option shown when you do /YOURCOMMAND
+					help = "If you set this ID, it will override line of sight." -- the help what shows once you do /YOURCOMMAND space
+				}
+			} 																
+		},
+		Note = NoteMode.Display	
+	
+	},
+	Grab = {
+		Enabled = true,											-- Enable or disable cuffs fucntionality - Default: true
+		NPC = true,												-- Can you grab NPC's or not - Default: true
+		Key = {													
+			Enabled = true,										-- Enable or disable the key option -Default: true
+			vKey = vKeys["-"],									-- This is the key pressed in game, coverted to vKeys Key list at the top - Default:-
+			Ace = {
+				Enabled = false,
+				Warning = {
+					Enabled = true,
+					Message = "Your grib is no good, your unable to grab people."
+				}
+			}			
+		},
+		Command = {
+			Ace = {
+				Enabled = false,
+				Warning = {
+					Enabled = true,
+					Message = "Your grib is no good, your unable to grab people."
+				}
+			},
+			Enabled = true,										-- Enable and disabled the Command fucntionality - Default:true
+			ChatCommand = "grab",								-- The command in the chat - Default: grab
+			ChatInformation = "Toggles the grab function",		-- What it says in the chat when you start typing the command - Default: Toggles the grab function.
 			ChatArguments = {
 				{
 					name = "Player ID - Optional",				-- The main option shown when you do /YOURCOMMAND
@@ -124,17 +160,3 @@ CuffsUP = {
 		}
 	}
 }
-
--- Ace defaults to add to your server config:
---[[
-add_ace group.cubasic cuffsup.hu allow					# Sets up basic, add this but use the config to enable or disable the need for it.
-add_ace group.cuofficer cuffsup.cuff allow				# Sets up officers, add this but use the config to enable or disable the need for it.
-add_ace group.cuowner cuffsup.boss allow 				# Sets up Owner, this is needed for the owner to fully test all functions.
-add_principal group.cuofficer group.cubasic 			# Lets officers put there hands up is basic permssions are on
-add_principal group.cuowner group.cuofficer 			# Let Owner of script as officer, good idea for testing.
-add_principal group.admin group.cuofficer				# Optional this sets admins as officers.
-add_principal group.owner group.cuowner 				# Optional this sets Owner as Owner of the script
-#add_principal identifier.steam:110000000000000 group.cubasic  		#Example to add a user to hands up if you enable it, I advice you don't 
-#add_principal identifier.steam:110000000000000 group.cuofficer		#Example to add a user as a officer to use /cuffs command no need for basic
-#add_principal identifier.steam:110000000000000 group.cuowner		#Example to set users as owner of the script, give them access to all commands no need for officer or basic.
-]]--
